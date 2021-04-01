@@ -23,6 +23,25 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.Sidebar-content,
+Link {
+  text-decoration: none;
+  color: black;
+  /* font-Weight: 'theme.typography.fontWeightMedium', */
+  
+}
+#demoObject {
+  /* -webkit-box-shadow: 0px 0px 5px 6px rgba(167, 167, 167, 0.58); */
+  /* box-shadow: 0px 0px 5px 6px rgba(167, 167, 167, 0.58); */
+  background: #ffffff;
+  height: 9rem;
+  width: 20rem;
+  border-radius: 6px;
+  text-align: center;
+  /* padding-top:4rem; */
+  position: absolute;
+  font-weight: bold;
+}
 
 .App-link {
   color: #61dafb;
