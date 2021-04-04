@@ -11,7 +11,9 @@ import AddStock from './AddStock';
 import StockList from './StockList';
 import PartyPurchase from './PartyPurchase';
 import ReturnForm from './ReturnForm';
+import ReturnBill from './ReturnBill';
 import MultipleInput from './MultipleInput';
+import ReturnInvoice from './ReturnInvoice';
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
     <Route path="/PartyPurchase" component={PartyPurchase}/>
     <Route path="/ReturnForm" component={ReturnForm}/>
     <Route path="/MultipleInput" component={MultipleInput}/>
+    <Route path="/ReturnBill" component={ReturnBill}/>
+    <Route path="/ReturnInvoice" component={ReturnInvoice}/>
    
     </Router>
   );

@@ -16,10 +16,11 @@ import React, { Component } from "react";
 import firebaseDb from "./firebase.js";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import { Link } from "react-router-dom";
 
 const initialFieldValues = {
   BillNo: "",
-  Product: [{ ID: "", Quantity: "" }],
+  Product: [{ ID: "", Quantity: "", Rate:"" }],
   Quantity: "",
   PurchaseAmt: "",
   ReturnPercentage: "",
@@ -94,7 +95,7 @@ class ReturnForm extends Component {
   // handle click event of the Add button
   handleAddClick = () => {
     this.setState({
-      Product: [...this.state.Product, { ID: "", Quantity: "" }],
+      Product: [...this.state.Product, { ID: "", Quantity: "" , Rate:""}],
     });
   };
 
@@ -153,36 +154,38 @@ class ReturnForm extends Component {
     //   alert("Enter Party Mobile Number");
     // }
 
-    if (this.state.stockof === "Anu") {
-      firebaseDb
-        .database()
-        .ref("Admin/Anu/Stock")
-        .child(this.state.ProductId)
-        .set(obj);
+    // if (this.state.stockof === "Anu") {
+    //   firebaseDb
+    //     .database()
+    //     .ref("Admin/Return/Products")
+    //     .set(this.state.Product)
+        
 
-      var total = this.state.PurchaseAmt * this.state.Quantity;
-      firebaseDb
-        .database()
-        .ref("Admin/Anu/Stock")
-        .child(this.state.ProductId)
-        .child("Totalamt")
-        .set(total);
-    } else {
-      firebaseDb
-        .database()
-        .ref("Admin/Aarthi/Stock")
-        .child(this.state.ProductId)
-        .set(obj);
-      var totalamt = this.state.PurchaseAmt * this.state.Quantity;
-      firebaseDb
-        .database()
-        .ref("Admin/AArthi/Stock")
-        .child(this.state.ProductId)
-        .child("TotalAmt")
-        .set(totalamt);
-    }
+    //   var total = this.state.PurchaseAmt * this.state.Quantity;
+    //   firebaseDb
+    //     .database()
+    //     .ref("Admin/Anu/Stock")
+    //     .child(this.state.ProductId)
+    //     .child("Totalamt")
+    //     .set(total);
+    // } else {
+    //   firebaseDb
+    //     .database()
+    //     .ref("Admin/Aarthi/Stock")
+    //     .child(this.state.ProductId)
+    //     .set(obj);
+    //   var totalamt = this.state.PurchaseAmt * this.state.Quantity;
+    //   firebaseDb
+    //     .database()
+    //     .ref("Admin/AArthi/Stock")
+    //     .child(this.state.ProductId)
+    //     .child("TotalAmt")
+    //     .set(totalamt);
+    // }
 
-    this.reset();
+    // this.reset();
+    //firebaseDb.database().ref("Admin/Return/Products").set(this.state.Product)
+    firebaseDb.database().ref("Admin/Return").set(obj)
   };
 
   handleFormSubmit = (e) => {
@@ -225,18 +228,7 @@ class ReturnForm extends Component {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      name="PurchaseAmt"
-                      label="Invoice Rate"
-                      fullWidth
-                      value={this.state.PurchaseAmt}
-                      autoComplete="off"
-                      onChange={this.handleInputChange}
-                    />
-                  </Grid>
-
+                 
                   <Grid item xs={12} sm={6}>
                     <TextField
                       required
@@ -248,7 +240,7 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} >
                     <TextField
                       required
                       name="Gst"
@@ -264,7 +256,7 @@ class ReturnForm extends Component {
                     <>
                     {/* <p></p>
                     <p>{i}</p> */}
-                    <Grid item >
+                    <Grid item xs={3}>
                     <TextField
                       required
                       name="ID"
@@ -276,7 +268,7 @@ class ReturnForm extends Component {
                     />
                   </Grid>
 
-                  <Grid item>
+                  <Grid item xs={3}>
                     <TextField
                       required
                       name="Quantity"
@@ -287,6 +279,18 @@ class ReturnForm extends Component {
                       onChange={e => this.handleInputChange1(e, i)}
                     />
                   </Grid>
+                  <Grid item  sm={2}>
+                    <TextField
+                      required
+                      name="Rate"
+                      label=" Rate"
+                      fullWidth
+                      value={this.state.Product.Rate}
+                      autoComplete="off"
+                      onChange={e=>this.handleInputChange1(e,i)}
+                    />
+                  </Grid>
+
                   <Grid>
                   {this.state.Product.length !== 1 && (
                     <button
@@ -342,14 +346,18 @@ class ReturnForm extends Component {
                   </Grid> */}
 
                   <Grid>
+                    <Link to="/ReturnBill">
+                    Bill
                     <Button
                       variant="contained"
                       color="Primary"
-                      onClick={this.handleFormSubmit}
+                      onClick={this.handleFormSubmit }
                       className={classes.button}
                     >
-                      Save
+                      Bill
                     </Button>
+                    </Link>
+                    
                     
                   </Grid>
                 </Grid>
