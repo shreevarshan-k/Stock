@@ -132,7 +132,9 @@ class SidebarEmployee extends Component {
               // component={RouterLink}
 
               //src="https://firebasestorage.googleapis.com/v0/b/asset-d7110.appspot.com/o/admin%2FASSET-USER-ADMIN.png?alt=media&token=38195c4a-6dc5-484a-a19b-9cf890215264"
-              src="https://firebasestorage.googleapis.com/v0/b/stock-5230f.appspot.com/o/Ra5894039504b4e8edfb1d4dba914f3ee.png?alt=media&token=49730172-1aef-4e31-9f40-84239a94537f"
+              //src="https://firebasestorage.googleapis.com/v0/b/stock-5230f.appspot.com/o/Ra5894039504b4e8edfb1d4dba914f3ee.png?alt=media&token=49730172-1aef-4e31-9f40-84239a94537f"
+              //src="https://firebasestorage.googleapis.com/v0/b/stock-5230f.appspot.com/o/WhatsApp%20Image%202021-04-03%20at%202.20.06%20PM%20(1).jpeg?alt=media&token=c44ef9ea-aaf5-4338-9f95-efc24ffa00ac"
+              src="https://firebasestorage.googleapis.com/v0/b/stock-5230f.appspot.com/o/WhatsApp%20Image%202021-04-03%20at%202.24.28%20PM.jpeg?alt=media&token=e50b72ce-ff67-4d22-a898-f90e6fae8d91"
               to="/app/account"
             />
             <Typography
@@ -148,9 +150,9 @@ class SidebarEmployee extends Component {
           </Box>
           <Divider />
           <List>
-            <Link to="/Homepage" className="Sidebar-content">
+            <Link to="/" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon  style={{ color: "#00ccff" }}>
+                <ListItemIcon  style={{ color: "#ffcc00" }}>
                   <HomeIcon />
                 </ListItemIcon>
 
@@ -161,7 +163,7 @@ class SidebarEmployee extends Component {
             
             <Link to="/AddParty" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color : "#00ccff"}}>
+                <ListItemIcon style={{color : "#ffcc00"}}>
                   <CategoryIcon />
                 </ListItemIcon>
 
@@ -169,10 +171,20 @@ class SidebarEmployee extends Component {
               </ListItem>
             </Link>
 
+            <Link to="/PartiesList" className="Sidebar-content">
+              <ListItem button activeClassName={classes.active}>
+                <ListItemIcon style={{color : "#ffcc00"}}>
+                  <CategoryIcon />
+                </ListItemIcon>
+
+                <ListItemText primary="Parties Details" />
+              </ListItem>
+            </Link>
+
 
             <Link to="/Purchase" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color : "#00ccff"}}>
+                <ListItemIcon style={{color : "#ffcc00"}}>
                   <CategoryIcon />
                 </ListItemIcon>
 
@@ -181,7 +193,7 @@ class SidebarEmployee extends Component {
             </Link>
             <Link to="/PurchaseList" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color : "#00ccff"}}>
+                <ListItemIcon style={{color : "#ffcc00"}}>
                   <CategoryIcon />
                 </ListItemIcon>
 
@@ -193,7 +205,7 @@ class SidebarEmployee extends Component {
 
             <Link to="/AddStock" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color:"#00ccff"}}>
+                <ListItemIcon style={{color:"#ffcc00"}}>
                   <AddIcon />
                 </ListItemIcon>
 
@@ -203,10 +215,18 @@ class SidebarEmployee extends Component {
 
             <Link to="/StockList" className="Sidebar-content">
               <ListItem button>
-                <ListItemIcon style={{color:"#00ccff"}}>
+                <ListItemIcon style={{color:"#ffcc00"}}>
                   <CategoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Stocks" style={{ color: "black" }} />
+              </ListItem>
+            </Link>
+            <Link to="/ReturnForm" className="Sidebar-content">
+              <ListItem button>
+                <ListItemIcon style={{color:"#ffcc00"}}>
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Return" style={{ color: "black" }} />
               </ListItem>
             </Link>
 

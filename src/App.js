@@ -9,6 +9,9 @@ import Purchase from './Purchase';
 import PurchaseList from './PurchaseList';
 import AddStock from './AddStock';
 import StockList from './StockList';
+import PartyPurchase from './PartyPurchase';
+import ReturnForm from './ReturnForm';
+import MultipleInput from './MultipleInput';
 
 function App() {
   return (
@@ -22,6 +25,10 @@ function App() {
     <Route path="/PurchaseList" component={PurchaseList}/>
     <Route path="/AddStock" component={AddStock}/>
     <Route path="/StockList" component={StockList}/>
+    <Route path="/PartyPurchase" component={PartyPurchase}/>
+    <Route path="/ReturnForm" component={ReturnForm}/>
+    <Route path="/MultipleInput" component={MultipleInput}/>
+   
     </Router>
   );
 }

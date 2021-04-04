@@ -39,7 +39,7 @@ class StockList extends Component {
               <AvailableStock/>
             </Tab>
             <Tab eventKey="profile" title="Out of Stock">
-              jello
+              Comming Soon
             </Tab>
            
           </Tabs>

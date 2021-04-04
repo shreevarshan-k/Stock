@@ -28,6 +28,7 @@ const initialFieldValues = {
   Invoice: "",
   lorrycopy: "",
   purchaseby: "",
+  lorryEx: "",
 };
 
 const drawerWidth = 240;
@@ -84,7 +85,8 @@ class Form extends Component {
 
   handleInputChange = (e) => {
     var { name, value } = e.target;
-    if (name === "PartyMobile" && value.length === 10) {
+    if (name === "PartyMobile") {
+      //Add the length in the if condition to solve the error
       firebaseDb
         .database()
         .ref("Admin/Parties")
@@ -93,9 +95,12 @@ class Form extends Component {
         .on("value", (snapshot) => {
           if (snapshot.val() != null) {
             this.setState({ PartyName: snapshot.val() });
-          } else {
-            alert("Party Not Found");
+            console.log(snapshot.val());
+            console.log(this.state.PartyName);
           }
+          // else {
+          //   alert("Party Not Found");
+          // }
         });
     }
     this.setState({
@@ -129,7 +134,30 @@ class Form extends Component {
   };
 
   addorEdit = (obj) => {
-    if (this.state.PartyMobile && this.state.PartyName) {
+    var today = new Date();
+    if (today.getDate() < 10 && today.getMonth() < 10) {
+      var date =
+        today.getFullYear() +
+        "-0" +
+        (today.getMonth() + 1) +
+        "-0" +
+        today.getDate();
+    } else if (today.getDate() < 10) {
+      date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-0" +
+        today.getDate();
+    } else if (today.getMonth() < 10) {
+      date =
+        today.getFullYear() +
+        "-0" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
+    }
+    if (this.state.PartyMobile) {
       firebaseDb
         .database()
         .ref("Admin/Parties/")
@@ -137,9 +165,7 @@ class Form extends Component {
         .child("Purchase")
         .child(this.state.BillNO)
         .set(obj);
-    } else {
-      alert("Enter Party Mobile Number");
-    }
+    
 
     if (this.state.purchaseby === "Anu") {
       if (this.state.Gst === "Yes") {
@@ -148,25 +174,35 @@ class Form extends Component {
           .ref("Admin/Anu/Purchase/GST")
           .child(this.state.BillNO)
           .set(obj);
-      }
-      else{
         firebaseDb
-        .database()
-        .ref("Admin/Anu/Purchase/NoGST")
-        .child(this.state.BillNO)
-        .set(obj);
-
-      }
-
-    }
-    else{
+          .database()
+          .ref("Admin/Anu/Expensense")
+          .child(date)
+          .child(this.state.BillNO)
+          .set({ Reason: "Lorry", Amount: this.state.lorryEx });
+      } else {
         firebaseDb
+          .database()
+          .ref("Admin/Anu/Purchase/NoGST")
+          .child(this.state.BillNO)
+          .set(obj);
+      }
+    } else {
+      firebaseDb
         .database()
         .ref("Admin/Aarthi/Purchase/NoGST")
         .child(this.state.BillNO)
-        .set(obj);
-
+        .set(obj)
+        firebaseDb
+        .database()
+        .ref("Admin/Aarthi/Expensense")
+        .child(date)
+        .child(this.state.BillNO)
+        .set({ Reason: "Lorry", Amount: this.state.lorryEx });
     }
+  } else {
+    alert("Enter Party Mobile Number");
+  }
 
     this.reset();
   };
@@ -181,6 +217,7 @@ class Form extends Component {
 
   render() {
     const { classes } = this.props;
+
     return (
       <>
         <div className={classes.root}>
@@ -268,6 +305,17 @@ class Form extends Component {
                       label="Transaction ID"
                       fullWidth
                       value={this.state.Transacid}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      name="lorryEx"
+                      label="Lorry Expense"
+                      fullWidth
+                      value={this.state.lorryEx}
                       autoComplete="off"
                       onChange={this.handleInputChange}
                     />

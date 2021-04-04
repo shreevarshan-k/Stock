@@ -2,13 +2,14 @@ import {
   Box,
   Card,
   CardContent,
-  FormControl,
+  //FormControl,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
 } from "@material-ui/core";
+//import Button from "@material-ui/core/Button";
 
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
@@ -16,13 +17,14 @@ import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import React, { Component } from "react";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button"
+// import InputLabel from "@material-ui/core/InputLabel";
+// import MenuItem from "@material-ui/core/MenuItem";
+// import Select from "@material-ui/core/Select";
+
 import firebaseDb from "./firebase.js";
-var amt=[];
-var tamt=0;
+import Navbar from "./Navbar.js";
+import Sidebar from "./Sidebar.js";
+
 const ref = React.createRef();
 // var today = new Date(),
 // const drawerWidth = 240;
@@ -45,46 +47,38 @@ const useStyles = (theme) => ({
   },
 });
 
-class AvailableList extends Component {
+class NonGstPurchase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "shree",
+      name: "",
       studentObjects: {},
       DealList: {},
       qualList: {},
       rate: "",
-      Category:"",
-      total:"",
+      Category: "",
+      
     };
   }
 
   componentDidMount() {
-    
-  }
-  view=()=>{
+    console.log(localStorage.getItem("party"));
     firebaseDb
-    .database()
-    .ref("Admin/"+this.state.Category).child("Stock")
-    .on("value", (snapshot) => {
-      if (snapshot.val() != null) {
-        this.setState({ qualList: { ...snapshot.val() } });
-      }
-      else{
-          this.setState({qualList:{}})
-      }
-    });}
+      .database()
+      .ref("Admin/Parties")
+      .child(localStorage.getItem("party"))
+      .child("Purchase")
+      .on("value", (snapshot) => {
+        if (snapshot.val() != null) {
+          this.setState({ qualList: { ...snapshot.val() } });
+        }
+      });
+      firebaseDb.database().ref("Admin/Parties").child(localStorage.getItem("party")).child("PartyName").on("value",(snapshot)=>{
+          if(snapshot.val()!=null){
+              this.setState({name: snapshot.val()})
 
-  amount=()=>{
-    tamt=0;
-    
-    for(let i=0;i<amt.length;i++){
-      
-      tamt=tamt+amt[i];
-
-
-    }
-    return(tamt)
+          }
+      })
   }
 
   myFunction() {
@@ -111,11 +105,14 @@ class AvailableList extends Component {
 
   handleInputChange = (e) => {
     var { name, value } = e.target;
+    console.log(value);
+
     this.setState({
       ...this.state,
       [name]: value,
     });
   };
+ 
 
   render() {
     const { classes } = this.props;
@@ -123,6 +120,8 @@ class AvailableList extends Component {
     return (
       <>
         <div className={classes.root}>
+            <Sidebar/>
+            <Navbar/>
           <main className={classes.content}>
             <card minWidth={1050} ref={ref}>
               <Toolbar />
@@ -130,7 +129,7 @@ class AvailableList extends Component {
                 <Typography variant="h6" gutterBottom>
                   <h2>Purchase List</h2>
                 </Typography>
-                <Box>
+                <Box mt={3}>
                   <Card>
                     <CardContent>
                       <TextField
@@ -140,40 +139,8 @@ class AvailableList extends Component {
                         id="myInput"
                         onKeyUp={() => this.myFunction()}
                       />
-                      {/* <pre >      Total:{tamt}</pre> */}
-                      
-                    
-                    <FormControl className={classes.formControl}>
-                    
-                    
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                      label="Category"
-                      s
-                      name="Category"
-                      value={this.state.Category}
-                      // variant="outlined"
-                      onChange={this.handleInputChange}
-                      fullWidth
-                    >
-                      {" "}
-                      <MenuItem key={"Anu"} value={"Anu"}>
-                        {"Anu"}
-                      </MenuItem>
-                      <MenuItem key={"Aarthi"} value={"Aarthi"}>
-                        {"Aarthi"}
-                      </MenuItem>
-                    </Select>
-                    </FormControl>
-                    <Button
-                      variant="contained"
-                      color="Primary"
-                      onClick={this.view}
-                      className={classes.button}
-                    >
-                      View
-                    </Button>
-                    
+                        <h3>
+                      Name : {this.state.name}</h3>
                     </CardContent>
                   </Card>
                 </Box>
@@ -191,50 +158,58 @@ class AvailableList extends Component {
                               <TableHead>
                                 <TableRow>
                                   <TableCell>Bill No</TableCell>
-                                  <TableCell>Product ID</TableCell>
+                                  <TableCell>Date</TableCell>
 
-                                  <TableCell>Purchase Price</TableCell>
-                                  <TableCell>Retail Price</TableCell>
-                                  <TableCell>Quantity</TableCell>
-                                  <TableCell>Amount of Stock</TableCell>
+                                  <TableCell>Bill Amount</TableCell>
+                                  <TableCell>Transaction ID</TableCell>
+                                  <TableCell>Purchased By</TableCell>
+                                  
+
+                                  <TableCell>Invoice</TableCell>
+
+                                  <TableCell>Lorry Copy</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
                                 {Object.keys(this.state.qualList).map((key) => (
                                   <TableRow hover key={key}>
                                     <TableCell>
-                                      {this.state.qualList[key].BillNo}
+                                      {this.state.qualList[key].BillNO}
                                     </TableCell>
                                     <TableCell>
-                                      {this.state.qualList[key].ProductId}
+                                      {this.state.qualList[key].Date}
                                     </TableCell>
                                     <TableCell>
-                                      {this.state.qualList[key].PurchaseAmt}
+                                      {this.state.qualList[key].BillAmount}
                                     </TableCell>
                                     <TableCell>
-                                      {this.state.qualList[key].RetailAmt}
+                                      {this.state.qualList[key].Transacid}
                                     </TableCell>
                                     <TableCell>
-                                      {this.state.qualList[key].Quantity}
+                                      {this.state.qualList[key].purchaseby}
                                     </TableCell>
+                                
                                     <TableCell>
-                                      {this.state.qualList[key].Totalamt}
+                                      <a
+                                        href={this.state.qualList[key].invoice}
+                                        target="blank"
+                                      >
+                                        Invoice
+                                      </a>
                                     </TableCell>
-                                   
-                                    {amt.push(this.state.qualList[key].Totalamt)}
-                                    
+
+                                    <TableCell>
+                                      <a
+                                        href={
+                                          this.state.qualList[key].lorrycopy
+                                        }
+                                        target="blank"
+                                      >
+                                        LorryCopy
+                                      </a>
+                                    </TableCell>
                                   </TableRow>
                                 ))}
-                                <TableCell colSpan="4">
-
-                                </TableCell>
-                                <TableCell >
-                                  Total Amount:
-                                </TableCell>
-                                <TableCell>
-                                  {this.amount()}
-                                  {amt=[]}
-                                </TableCell>
                               </TableBody>
                             </Table>
                           </CardContent>
@@ -251,4 +226,4 @@ class AvailableList extends Component {
     );
   }
 }
-export default withStyles(useStyles)(AvailableList);
+export default withStyles(useStyles)(NonGstPurchase);

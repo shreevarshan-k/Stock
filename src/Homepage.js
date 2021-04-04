@@ -1,29 +1,19 @@
 import React, { Component } from "react";
- import Navbar from "./Navbar";
+import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withStyles } from "@material-ui/core/styles";
-import firebaseDb from './firebase.js';
-import Home1 from './Home1';
-import Home2 from './Home2';
-import Home3 from './Home3';
-// import Numofcategory from './Numofcategory'
-// import Noofassetbooked from './Noofassetbooked'
-// import Nooffailureasset from './Nooffailureasset'
-// import FailureAssets from'./FailureAssets'
-import {
+//import firebaseDb from "./firebase.js";
+import Home1 from "./Home1";
+import Home2 from "./Home2";
+import Home3 from "./Home3";
 
-  Grid,
- 
-} from '@material-ui/core';
-//import Shiftdetails from "../../Shiftdetails";
-
-
+import { Grid } from "@material-ui/core";
 
 const drawerWidth = 240;
 
 const useStyles = (theme) => ({
-  root: { 
+  root: {
     display: "flex",
   },
   appBar: {
@@ -41,85 +31,84 @@ const useStyles = (theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding:theme.spacing(5),
-    marginLeft:theme.spacing(35),
+    padding: theme.spacing(5),
+    marginLeft: theme.spacing(35),
   },
   nested: {
     paddingLeft: theme.spacing(4),
   },
-
-  
 });
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       studentObjects: {},
-      count:0
-     };
+      count: 0,
+    };
   }
 
-  componentDidMount() {
-     firebaseDb
-      .database()
-      .ref("Admin/Asset_category")
-      .on("value", (snapshot) => {
-        if (snapshot.val() != null) {
-          this.setState({ studentObjects: { ...snapshot.val() } });
-        }
-      })
-      
-      
-  }
+  // componentDidMount() {
+  //   firebaseDb
+  //     .database()
+  //     .ref("Admin/Asset_category")
+  //     .on("value", (snapshot) => {
+  //       if (snapshot.val() != null) {
+  //         this.setState({ studentObjects: { ...snapshot.val() } });
+  //       }
+  //     });
+  // }
 
-  count=()=>{
-    const c=[]
+  count = () => {
+    const c = [];
     for (let i in this.state.studentObjects) {
-      c.push(i)
-   }
-   console.log(c.length)
-  return(c.length)
-
-  }
-
-
+      c.push(i);
+    }
+    console.log(c.length);
+    return c.length;
+  };
 
   render() {
     const { classes } = this.props;
-    
 
     return (
       <div>
         <Sidebar />
-        
-        <Navbar /> 
-       
+
+        <Navbar />
+
         <main className={classes.content}>
-       
-          
           <Toolbar />
-          
-          <div id="demoObject" style={{marginLeft:"22rem"}} ><Home1/></div>
-          <div id="demoObject" style={{marginLeft:"44rem"}} >
-            <Home1/>
+
+          <div id="demoObject" style={{ marginLeft: "22rem" }}>
+            <Home1 />
           </div>
-          <div id="demoObject"><Home2/></div>
-         <div style={{marginTop:"13rem"}}> <Home3/></div>
-         <Grid
-            // item
-            // lg={8}
-            // md={12}
-            // xl={9}
-            // xs={12}
+          <div id="demoObject" style={{ marginLeft: "44rem" }}>
+            <Home1 />
+          </div>
+          <div id="demoObject">
+            <Home2 />
+          </div>
+          <div style={{ marginTop: "13rem" }}>
+            {" "}
+            <Home3 />
+          </div>
+          <Grid
+          // item
+          // lg={8}
+          // md={12}
+          // xl={9}
+          // xs={12}
           >
-         <div style={{marginTop:"3rem"}}> <Home3/></div></Grid>
+            <div style={{ marginTop: "3rem" }}>
+              {" "}
+              <Home3 />
+            </div>
+          </Grid>
         </main>
       </div>
     );
   }
 }
-
-
 
 export default withStyles(useStyles)(Home);

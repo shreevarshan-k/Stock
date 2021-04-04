@@ -2,6 +2,7 @@ import {
   Box,
   Card,
   CardContent,
+  FormControl,
   Table,
   TableBody,
   TableCell,
@@ -36,6 +37,11 @@ const useStyles = (theme) => ({
   },
   button: {
     marginTop: theme.spacing(4),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
   },
 });
 
@@ -124,6 +130,7 @@ class NonGstPurchase extends Component {
                         id="myInput"
                         onKeyUp={() => this.myFunction()}
                       />
+                      <FormControl className={classes.formControl}>
                       <InputLabel>Category</InputLabel>
                       <Select
                         label="Category"
@@ -142,6 +149,7 @@ class NonGstPurchase extends Component {
                           {"Aarthi"}
                         </MenuItem>
                       </Select>
+                      </FormControl>
                       <Button
                                 variant="contained"
                                 color="Primary"
