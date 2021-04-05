@@ -14,8 +14,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import React, { Component } from "react";
 import firebaseDb from "./firebase.js";
-import { Col, Divider, Row } from 'antd';
-import 'antd/dist/antd.css';
+import { Col, Divider, Row } from "antd";
+import "antd/dist/antd.css";
 
 //import Pdf from "react-to-pdf";
 
@@ -102,18 +102,17 @@ class BillGenerate extends Component {
             <div style={{ padding: 20 }}>
               <Row>
                 <Col>
-                  <Divider style={{marginLeft:"10rem"}}>Invoice</Divider>
-                  <Divider style={{marginLeft: "10rem"}}>Unique Trendz</Divider>
+                  <Divider style={{ marginLeft: "10rem", marginTop:"2rem" }}>Invoice</Divider>
+                  
                 </Col>
               </Row>
 
               <Row gutter={24} style={{ marginTop: 32 }}>
                 <Col span={8}>
-                  <h3>Eco Haya</h3>
-                  <div>#944/945, 4th Cross, 9th Main,</div>
-                  <div>Vijaya Bank Layout,</div>
-                  <div>Bannerghatta Road,</div>
-                  <div>Bangalore - 560076</div>
+                  <h3>Unique Trendz</h3>
+                  <div>120,chinnakadai,Street</div>
+                  <div>Tiruvannamalai - 606601</div>
+                  <div>9787965463</div>
                 </Col>
                 <Col span={8} offset={1}>
                   <table>
@@ -123,34 +122,28 @@ class BillGenerate extends Component {
                     </tr>
                     <tr>
                       <th>Return Date :</th>
-                      <td>10-01-2018</td>
+                      <td>{this.state.assetObjects.Date}</td>
                     </tr>
-                    
                   </table>
                 </Col>
               </Row>
             </div>
 
+            <Row style={{ marginTop: 48 }}>
+              <div>
+                Bill To: <strong>{this.state.assetObjects.PartyName}</strong>
+              </div>
+              <div>{this.state.assetObjects.Address}</div>
+              <div>
+                {this.state.assetObjects.District} -{" "}
+                {this.state.assetObjects.Pincode}
+              </div>
+            </Row>
+
             <card minWidth="75%" ref={ref}>
               <Toolbar />
               <React.Fragment>
-                {/* <Typography variant="h6" gutterBottom>
-                  <h2>Return Bill</h2>
-                </Typography> */}
-
-                {/* <h4>
-                  BillNo:{this.state.assetObjects.BillNo}
-                  <br />
-                  <br /> Bill Date:
-                  <br />
-                  <br />
-                  Custmer Name:
-                  <br />
-                  <br />
-                  Custmer Number:
-                </h4> */}
-
-                <Box >
+                <Box style={{ marginTop: "-2rem", width: 700 }}>
                   <Card>
                     <CardContent>
                       <Table style={{ width: 700 }}>
@@ -194,7 +187,30 @@ class BillGenerate extends Component {
                     </CardContent>
                   </Card>
                 </Box>
-                <Box mt={3}>
+                <Row style={{ marginTop: 48 }}>
+                  <Col span={8} offset={9}>
+                    <table>
+                      <tr>
+                        <th>Total Amount :</th>
+                        <td>Rs. {billamount}</td>
+                      </tr>
+                      <tr>
+                        <th>Discount :</th>
+                        <td>{this.state.assetObjects.ReturnPercentage} %</td>
+                      </tr>
+                      <tr>
+                        <th>GST :</th>
+                        <td>{this.state.assetObjects.Gst} %</td>
+                      </tr>
+                      <tr>
+                        <th>Nett Total :</th>
+                        <td>Rs. {this.Finalamt()}</td>
+                      </tr>
+                    </table>
+                  </Col>
+                </Row>
+
+                  {/* <Box mt={3}>
                   <Card>
                     <CardContent>
                       <Table style={{ width: 500 }}>
@@ -205,14 +221,14 @@ class BillGenerate extends Component {
                             {this.state.assetObjects.ReturnPercentage}%
                           </TableCell>
                           <TableCell>
-                            GST Tax: {this.state.assetObjects.Gst}%
+                            GST Tax : {this.state.assetObjects.Gst}%
                           </TableCell>
                           <TableCell>Final Amount: {this.Finalamt()}</TableCell>
                         </TableRow>
                       </Table>
                     </CardContent>
                   </Card>
-                </Box>
+                </Box> */}
               </React.Fragment>
             </card>
             {/* <Pdf targetRef={ref} filename={this.state.Leadobj}>

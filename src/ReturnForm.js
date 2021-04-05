@@ -26,6 +26,12 @@ const initialFieldValues = {
   ReturnPercentage: "",
   Gst: "",
   stockof: "",
+  PartyName:"",
+  Address:"",
+  District:"",
+  Pincode:"",
+  PartyMobile:"",
+  Date:"",
 };
 
 // const product={ProductId:""}
@@ -216,6 +222,77 @@ class ReturnForm extends Component {
                 </Typography>
 
                 <Grid container spacing={3}>
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      name="PartyName"
+                      label="PartyName"
+                      fullWidth
+                      value={this.state.PartyName}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      name="PartyMobile"
+                      label="PartyMobile"
+                      fullWidth
+                      value={this.state.PartyMobile}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} >
+                    <TextField
+                      required
+                      name="Address"
+                      label="Address"
+                      fullWidth
+                      value={this.state.Address}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      name="District"
+                      label="District"
+                      fullWidth
+                      value={this.state.District}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      name="Pincode"
+                      label="Pincode"
+                      fullWidth
+                      value={this.state.Pincode}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      required
+                      name="Date"
+                      label="Return Date"
+                      fullWidth
+                      value={this.state.Date}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                  </Grid>
+                  
+
                   <Grid item xs={12} sm={6}>
                     <TextField
                       required
