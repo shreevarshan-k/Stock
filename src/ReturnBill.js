@@ -16,6 +16,7 @@ import React, { Component } from "react";
 import firebaseDb from "./firebase.js";
 import { Col, Divider, Row } from "antd";
 import "antd/dist/antd.css";
+import Pdf from "react-to-pdf";
 
 //import Pdf from "react-to-pdf";
 
@@ -31,6 +32,7 @@ const useStyles = (theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    marginLeft: "2rem"
   },
   button: {
     marginTop: theme.spacing(4),
@@ -98,7 +100,8 @@ class BillGenerate extends Component {
         <div className={classes.root}>
           <Navbar />
           <Sidebar />
-          <main className={classes.content}>
+          <main className={classes.content} ref={ref} >
+            
             <div style={{ padding: 20 }}>
               <Row>
                 <Col>
@@ -131,16 +134,16 @@ class BillGenerate extends Component {
 
             <Row style={{ marginTop: 48 }}>
               <div>
-                Bill To: <strong>{this.state.assetObjects.PartyName}</strong>
+                Bill To: <strong>{this.state.assetObjects.PartyName} ,</strong>
               </div>
-              <div>{this.state.assetObjects.Address}</div>
+              <div> {this.state.assetObjects.Address}</div>
               <div>
                 {this.state.assetObjects.District} -{" "}
                 {this.state.assetObjects.Pincode}
               </div>
             </Row>
 
-            <card minWidth="75%" ref={ref}>
+            <card minWidth="75%" >
               <Toolbar />
               <React.Fragment>
                 <Box style={{ marginTop: "-2rem", width: 700 }}>
@@ -231,10 +234,12 @@ class BillGenerate extends Component {
                 </Box> */}
               </React.Fragment>
             </card>
-            {/* <Pdf targetRef={ref} filename={this.state.Leadobj}>
+            
+            </main>
+            <Pdf targetRef={ref} filename={this.state.Leadobj}>
                   {({ toPdf }) => <button onClick={toPdf}>Capture as PDF</button>}
-                </Pdf> */}
-          </main>
+                </Pdf>
+         
         </div>
       </>
     );
