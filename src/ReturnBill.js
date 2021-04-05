@@ -11,7 +11,7 @@ import {
 //import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+//import Typography from "@material-ui/core/Typography";
 import React, { Component } from "react";
 import firebaseDb from "./firebase.js";
 import { Col, Divider, Row } from "antd";
