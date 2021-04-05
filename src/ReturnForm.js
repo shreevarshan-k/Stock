@@ -20,18 +20,18 @@ import { Link } from "react-router-dom";
 
 const initialFieldValues = {
   BillNo: "",
-  Product: [{ ID: "", Quantity: "", Rate:"" }],
+  Product: [{ ID: "", Quantity: "", Rate: "" }],
   Quantity: "",
   PurchaseAmt: "",
   ReturnPercentage: "",
   Gst: "",
   stockof: "",
-  PartyName:"",
-  Address:"",
-  District:"",
-  Pincode:"",
-  PartyMobile:"",
-  Date:"",
+  PartyName: "",
+  Address: "",
+  District: "",
+  Pincode: "",
+  PartyMobile: "",
+  Date: "",
 };
 
 // const product={ProductId:""}
@@ -92,7 +92,7 @@ class ReturnForm extends Component {
 
   // handle click event of the Remove button
   handleRemoveClick = (index) => {
-    console.log(index)
+    console.log(index);
     const list = [...this.state.Product];
     list.splice(index, 1);
     this.setState({ Product: list });
@@ -101,7 +101,7 @@ class ReturnForm extends Component {
   // handle click event of the Add button
   handleAddClick = () => {
     this.setState({
-      Product: [...this.state.Product, { ID: "", Quantity: "" , Rate:""}],
+      Product: [...this.state.Product, { ID: "", Quantity: "", Rate: "" }],
     });
   };
 
@@ -143,55 +143,45 @@ class ReturnForm extends Component {
   //   };
 
   addorEdit = (obj) => {
-    for(var i=0;i<this.state.Product.length;i++)
-    {
+    var quantity=[];
+    for (var i = 0; i < this.state.Product.length; i++) {
       console.log(this.state.Product[i].ID);
-      console.log(this.state.Product[i].Quantity)
-    }
-    // if (this.state.PartyMobile && this.state.PartyName) {
-    //   firebaseDb
-    //     .database()
-    //     .ref("Admin/Parties/")
-    //     .child(this.state.PartyMobile)
-    //     .child("Purchase")
-    //     .child(this.state.BillNO)
-    //     .set(obj);
-    // } else {
-    //   alert("Enter Party Mobile Number");
-    // }
-
-    // if (this.state.stockof === "Anu") {
-    //   firebaseDb
-    //     .database()
-    //     .ref("Admin/Return/Products")
-    //     .set(this.state.Product)
+      console.log(this.state.Product[i].Quantity);
+      firebaseDb
+      .database()
+      .ref("Admin")
+      .child(this.state.stockof)
+      .child("Stock")
+      .child(obj.Product[i].ID)
+      .child("Quantity").on("value", (snapshot) => {
+        if (snapshot.val() != null) {
+          //this.setState({ PartyName: snapshot.val() });
+          
+          quantity.push(snapshot.val())
+          
+        }
         
+      });
+      
+      var qua=[];
+      for(var x=0;x<this.state.Product.length;x++){
+        qua.push(quantity[x]-this.state.Product[x].Quantity)
+        
+      }
+      console.log(qua);
+    }
+    for(var i=0;i<qua.length;i++){
+      firebaseDb.database().ref("Admin/Return/Balance").child(i).set(qua[i]);
+    }
 
-    //   var total = this.state.PurchaseAmt * this.state.Quantity;
-    //   firebaseDb
-    //     .database()
-    //     .ref("Admin/Anu/Stock")
-    //     .child(this.state.ProductId)
-    //     .child("Totalamt")
-    //     .set(total);
-    // } else {
-    //   firebaseDb
-    //     .database()
-    //     .ref("Admin/Aarthi/Stock")
-    //     .child(this.state.ProductId)
-    //     .set(obj);
-    //   var totalamt = this.state.PurchaseAmt * this.state.Quantity;
-    //   firebaseDb
-    //     .database()
-    //     .ref("Admin/AArthi/Stock")
-    //     .child(this.state.ProductId)
-    //     .child("TotalAmt")
-    //     .set(totalamt);
-    // }
+    
+
+    
+      console.log(this.state.PartyName)
 
     // this.reset();
     //firebaseDb.database().ref("Admin/Return/Products").set(this.state.Product)
-    firebaseDb.database().ref("Admin/Return").set(obj)
+    firebaseDb.database().ref("Admin/Return").set(obj);
   };
 
   handleFormSubmit = (e) => {
@@ -222,8 +212,7 @@ class ReturnForm extends Component {
                 </Typography>
 
                 <Grid container spacing={3}>
-
-                <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       required
                       name="PartyName"
@@ -246,7 +235,7 @@ class ReturnForm extends Component {
                     />
                   </Grid>
 
-                  <Grid item xs={12} >
+                  <Grid item xs={12}>
                     <TextField
                       required
                       name="Address"
@@ -291,7 +280,6 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  
 
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -305,7 +293,6 @@ class ReturnForm extends Component {
                     />
                   </Grid>
 
-                 
                   <Grid item xs={12} sm={6}>
                     <TextField
                       required
@@ -317,7 +304,7 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} >
+                  <Grid item xs={12}>
                     <TextField
                       required
                       name="Gst"
@@ -328,65 +315,64 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  {this.state.Product.map((x,i)=>{
-                    return(
-                    <>
-                    {/* <p></p>
+                  {this.state.Product.map((x, i) => {
+                    return (
+                      <>
+                        {/* <p></p>
                     <p>{i}</p> */}
-                    <Grid item xs={3}>
-                    <TextField
-                      required
-                      name="ID"
-                      label="Product Id"
-                      fullWidth
-                      value={this.state.Product.ID}
-                      autoComplete="off"
-                      onChange={e => this.handleInputChange1(e, i)}
-                    />
-                  </Grid>
+                        <Grid item xs={3}>
+                          <TextField
+                            required
+                            name="ID"
+                            label="Product Id"
+                            fullWidth
+                            value={this.state.Product.ID}
+                            autoComplete="off"
+                            onChange={(e) => this.handleInputChange1(e, i)}
+                          />
+                        </Grid>
 
-                  <Grid item xs={3}>
-                    <TextField
-                      required
-                      name="Quantity"
-                      label="Quantity"
-                      fullWidth
-                      value={this.state.Product.Quantity}
-                      autoComplete="off"
-                      onChange={e => this.handleInputChange1(e, i)}
-                    />
-                  </Grid>
-                  <Grid item  sm={2}>
-                    <TextField
-                      required
-                      name="Rate"
-                      label=" Rate"
-                      fullWidth
-                      value={this.state.Product.Rate}
-                      autoComplete="off"
-                      onChange={e=>this.handleInputChange1(e,i)}
-                    />
-                  </Grid>
+                        <Grid item xs={3}>
+                          <TextField
+                            required
+                            name="Quantity"
+                            label="Quantity"
+                            fullWidth
+                            value={this.state.Product.Quantity}
+                            autoComplete="off"
+                            onChange={(e) => this.handleInputChange1(e, i)}
+                          />
+                        </Grid>
+                        <Grid item sm={2}>
+                          <TextField
+                            required
+                            name="Rate"
+                            label=" Rate"
+                            fullWidth
+                            value={this.state.Product.Rate}
+                            autoComplete="off"
+                            onChange={(e) => this.handleInputChange1(e, i)}
+                          />
+                        </Grid>
 
-                  <Grid>
-                  {this.state.Product.length !== 1 && (
-                    <button
-                      className="mr10"
-                      onClick={() => this.handleRemoveClick(i)}
-                    >
-                      Remove
-                    </button>
-                  )}
-                  {this.state.Product.length - 1 === i && (
-                    <button onClick={this.handleAddClick}>Add</button>
-                  )}
-                  </Grid>
-                  </>)
-
+                        <Grid>
+                          {this.state.Product.length !== 1 && (
+                            <button
+                              className="mr10"
+                              onClick={() => this.handleRemoveClick(i)}
+                            >
+                              Remove
+                            </button>
+                          )}
+                          {this.state.Product.length - 1 === i && (
+                            <button onClick={this.handleAddClick}>Add</button>
+                          )}
+                        </Grid>
+                      </>
+                    );
                   })}
                   {/* <div style={{ marginTop: 20 }}>{JSON.stringify(this.state.Product)}</div> */}
 
-                  
                   <Grid item xs={12} sm={6}>
                     <InputLabel>Puchased By</InputLabel>
 
@@ -424,18 +410,16 @@ class ReturnForm extends Component {
 
                   <Grid>
                     <Link to="/ReturnBill">
-                    Bill
-                    <Button
-                      variant="contained"
-                      color="Primary"
-                      onClick={this.handleFormSubmit }
-                      className={classes.button}
-                    >
                       Bill
-                    </Button>
+                      <Button
+                        variant="contained"
+                        color="Primary"
+                        onClick={this.handleFormSubmit}
+                        className={classes.button}
+                      >
+                        Bill
+                      </Button>
                     </Link>
-                    
-                    
                   </Grid>
                 </Grid>
               </Container>
