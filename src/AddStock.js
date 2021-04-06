@@ -66,7 +66,7 @@ class AddStock extends Component {
     componentDidMount() {
       firebaseDb
         .database()
-        .ref("Admin/Anu/NONGSTStock")
+        .ref("Admin/Anu/Stock")
         .on("value", (snapshot) => {
           if (snapshot.val() != null) {
             this.setState({ studentObjects: { ...snapshot.val() } });
@@ -136,12 +136,13 @@ class AddStock extends Component {
      
         firebaseDb
         .database()
-        .ref("Admin/Anu/NONGSTStock")
+        .ref("Admin/Anu/Stock")
         .child(this.state.ProductId)
         .set(obj);
 
         var total=this.state.PurchaseAmt*this.state.Quantity;
-        firebaseDb.database().ref("Admin/Anu/NONGSTStock").child(this.state.ProductId).child("Totalamt").set(total);
+        firebaseDb.database().ref("Admin/Anu/Stock").child(this.state.ProductId).child("Totalamt").set(total);
+        firebaseDb.database().ref("Admin/Anu/Stock").child(this.state.ProductId).child("studentObjects").remove()
 
       
 
