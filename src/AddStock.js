@@ -63,18 +63,18 @@ class AddStock extends Component {
     this.state = initialFieldValues;
   }
 
-  //   componentDidMount() {
-  //     firebaseDb
-  //       .database()
-  //       .ref("Anu/Pruchase")
-  //       .on("value", (snapshot) => {
-  //         if (snapshot.val() != null) {
-  //           this.setState({ studentObjects: { ...snapshot.val() } });
-  //         }
-  //       });
+    componentDidMount() {
+      firebaseDb
+        .database()
+        .ref("Admin/Anu/NONGSTStock")
+        .on("value", (snapshot) => {
+          if (snapshot.val() != null) {
+            this.setState({ studentObjects: { ...snapshot.val() } });
+          }
+        });
 
-  //     console.log(this.state.studentObjects);
-  //   }
+      
+    }
 
   reset = () => {
     this.setState(initialFieldValues);
@@ -82,6 +82,11 @@ class AddStock extends Component {
 
   handleInputChange = (e) => {
     var { name, value } = e.target;
+    if(name==="ProductId"){
+      if(value in this.state.studentObjects){
+        alert("Product ID" + value + " Already Found");
+      }
+    }
     
     this.setState({
       ...this.state,
@@ -131,12 +136,12 @@ class AddStock extends Component {
      
         firebaseDb
         .database()
-        .ref("Admin/Anu/Stock")
+        .ref("Admin/Anu/NONGSTStock")
         .child(this.state.ProductId)
         .set(obj);
 
         var total=this.state.PurchaseAmt*this.state.Quantity;
-        firebaseDb.database().ref("Admin/Anu/Stock").child(this.state.ProductId).child("Totalamt").set(total);
+        firebaseDb.database().ref("Admin/Anu/NONGSTStock").child(this.state.ProductId).child("Totalamt").set(total);
 
       
 
@@ -152,7 +157,7 @@ class AddStock extends Component {
 
     }
 
-    this.reset();
+    
   };
 
   handleFormSubmit = (e) => {

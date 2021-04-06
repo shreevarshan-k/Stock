@@ -4,10 +4,12 @@ import Tab from "react-bootstrap/Tab";
 import AvailableStock from './AvailableStock';
 
 
+
 import { withStyles } from "@material-ui/core/styles";
 import Navbar from "./Navbar";
 
 import Sidebar from "./Sidebar";
+import NonGSTStock from "./NonGSTStock";
 
 const useStyles = (theme) => ({
   root: {
@@ -35,11 +37,11 @@ class StockList extends Component {
         </div>
         <main className={classes.content}>
           <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
-            <Tab eventKey="home" title="In Stock">
+            <Tab eventKey="home" title="GST Stock">
               <AvailableStock/>
             </Tab>
-            <Tab eventKey="profile" title="Out of Stock">
-              Comming Soon
+            <Tab eventKey="profile" title="NON GST Stock">
+              <NonGSTStock/>
             </Tab>
            
           </Tabs>
