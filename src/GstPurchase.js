@@ -18,7 +18,7 @@ import {
   
   import firebaseDb from "./firebase.js";
  
-  
+  var amt=[];
   const ref = React.createRef();
   // var today = new Date(),
   // const drawerWidth = 240;
@@ -49,7 +49,7 @@ import {
     }
   
     componentDidMount() {
-      console.log(localStorage.getItem("token"));
+     
       firebaseDb
         .database()
         .ref("Admin/Anu/Purchase/GST")
@@ -83,6 +83,14 @@ import {
       }
     }
   
+  Amount=()=>{
+    var total=0;
+    for(var i=0;i<amt.length;i++){
+      total=total+parseInt(amt[i]);
+      console.log(amt[i])
+    }
+   return(total)
+  }
   
     
     handleInputChange = (e) => {
@@ -119,6 +127,7 @@ import {
                           onKeyUp={() => this.myFunction()}
                         />
                       </CardContent>
+                      Total Amount : {this.Amount()}
                     </Card>
                   </Box>
   
@@ -165,6 +174,7 @@ import {
                                           </TableCell>
                                           <TableCell>
                                             {this.state.qualList[key].BillAmount}
+                                            {amt.push(this.state.qualList[key].BillAmount)}
                                           </TableCell>
                                           <TableCell>
                                             {this.state.qualList[key].Transacid}
@@ -187,6 +197,7 @@ import {
                                     
                                   )}
                                 </TableBody>
+                                Total Amount :{this.Amount()}
                               </Table>
                             </CardContent>
                           </Card>

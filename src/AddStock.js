@@ -66,7 +66,7 @@ class AddStock extends Component {
     componentDidMount() {
       firebaseDb
         .database()
-        .ref("Admin/Anu/Stock")
+        .ref("Admin/Anu/NONGSTStock")
         .on("value", (snapshot) => {
           if (snapshot.val() != null) {
             this.setState({ studentObjects: { ...snapshot.val() } });
@@ -94,29 +94,7 @@ class AddStock extends Component {
     });
   };
 
-//   Fileupload = (e) => {
-//     console.log("fn");
-//     e.preventDefault();
-//     var { name } = e.target;
 
-//     const file = e.target.files[0];
-//     const storageRef = firebaseDb
-//       .storage()
-//       .ref("Invoice/")
-//       .child(this.state.BillNO);
-//     const fileRef = storageRef.child(file.name);
-//     fileRef.put(file).then((snapshot) => {
-//       console.log("uploaded", file.name);
-//       fileRef.getDownloadURL().then((url) => {
-//         this.setState({
-//           ...this.state,
-//           [name]: url,
-//         });
-
-//         console.log(url);
-//       });
-//     });
-//   };
 
   addorEdit = (obj) => {
     // if (this.state.PartyMobile && this.state.PartyName) {
@@ -136,13 +114,13 @@ class AddStock extends Component {
      
         firebaseDb
         .database()
-        .ref("Admin/Anu/Stock")
+        .ref("Admin/Anu/NONGSTStock")
         .child(this.state.ProductId)
         .set(obj);
 
         var total=this.state.PurchaseAmt*this.state.Quantity;
-        firebaseDb.database().ref("Admin/Anu/Stock").child(this.state.ProductId).child("Totalamt").set(total);
-        firebaseDb.database().ref("Admin/Anu/Stock").child(this.state.ProductId).child("studentObjects").remove()
+        firebaseDb.database().ref("Admin/Anu/NONGSTStock").child(this.state.ProductId).child("Totalamt").set(total);
+        firebaseDb.database().ref("Admin/Anu/NONGSTStock").child(this.state.ProductId).child("studentObjects").remove()
 
       
 
@@ -157,6 +135,7 @@ class AddStock extends Component {
         firebaseDb.database().ref("Admin/AArthi/Stock").child(this.state.ProductId).child("TotalAmt").set(totalamt);
 
     }
+    this.reset();
 
     
   };

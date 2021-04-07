@@ -7,7 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Home1 from "./Home1";
 import Home2 from "./Home2";
 import Home3 from "./Home3";
-
+import Home4 from "./Home4";
 import { Grid } from "@material-ui/core";
 
 const drawerWidth = 240;
@@ -84,7 +84,7 @@ class Home extends Component {
             <Home1 />
           </div>
           <div id="demoObject" style={{ marginLeft: "44rem" }}>
-            <Home1 />
+            <Home4 />
           </div>
           <div id="demoObject">
             <Home2 />

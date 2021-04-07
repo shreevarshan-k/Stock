@@ -76,7 +76,7 @@ class Numofcategory extends Component {
   componentDidMount() {
      firebaseDb
       .database()
-      .ref("Admin/Anu/Stock")
+      .ref("Admin/Anu/NONGSTStock")
       .on("value", (snapshot) => {
         if (snapshot.val() != null) {
           this.setState({ studentObjects: { ...snapshot.val() } });
@@ -126,13 +126,13 @@ class Numofcategory extends Component {
               gutterBottom
               variant="h6"
             >
-              GST Stocks
+              NON GST Stocks
             </Typography>
             <Typography
               color="textPrimary"
               variant="h4"
             >
-              ₹ {this.count()}
+             ₹ {this.count()}
             </Typography>
           </Grid>
           <Grid item>
