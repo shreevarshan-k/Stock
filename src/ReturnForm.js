@@ -16,7 +16,8 @@ import React, { Component } from "react";
 import firebaseDb from "./firebase.js";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import Loader from "react-loader-spinner";
 
 const initialFieldValues = {
   BillNo: "",
@@ -35,7 +36,7 @@ const initialFieldValues = {
 };
 
 // const product={ProductId:""}
-
+var spin=0;
 const drawerWidth = 240;
 
 const useStyles = (theme) => ({
@@ -83,6 +84,13 @@ class ReturnForm extends Component {
 
   //     console.log(this.state.studentObjects);
   //   }
+
+  componentDidCatch(error, info) {
+    // Display fallback UI
+    this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    //logErrorToMyService(error, info);
+  }
   handleInputChange1 = (e, index) => {
     const { name, value } = e.target;
     const list = [...this.state.Product];
@@ -143,51 +151,46 @@ class ReturnForm extends Component {
   //   };
 
   addorEdit = (obj) => {
-    // var quantity=[];
-    // for (var i = 0; i < this.state.Product.length; i++) {
-    //   console.log(this.state.Product[i].ID);
-    //   console.log(this.state.Product[i].Quantity);
-    //   console.log(this.state.Product.length)
-    //   firebaseDb
-    //   .database()
-    //   .ref("Admin")
-    //   .child(this.state.stockof)
-    //   .child("Stock")
-    //   .child(obj.Product[i].ID)
-    //   .child("Quantity").on("value", (snapshot) => {
-    //     if (snapshot.val() != null) {
-    //       //this.setState({ PartyName: snapshot.val() });
-    //      console.log(snapshot.val())
-          
-    //       quantity.push(snapshot.val())
-          
-    //     }
-        
-    //   });
-    //   console.log(quantity);
-      
-    //   var qua=[];
-    //   for(var x=0;x<this.state.Product.length;x++){
-    //     qua.push(quantity[x]-this.state.Product[x].Quantity)
-        
-    //   }
-    //   console.log(qua);
-    // }
-    
+    var quantity = [];
+    for (let i in this.state.Product) {
+      console.log(this.state.Product[i].ID);
+      console.log(this.state.Product[i].Quantity);
+      console.log(this.state.Product.length);
+      firebaseDb
+        .database()
+        .ref("Admin")
+        .child(this.state.stockof)
+        .child("Stock")
+        .child(obj.Product[i].ID)
+        .child("Quantity")
+        .on("value", (snapshot) => {
+          if (snapshot.val() != null) {
+            //this.setState({ PartyName: snapshot.val() });
+            console.log(snapshot.val());
 
-    
+            quantity.push(snapshot.val() - obj.Product[i].Quantity);
+          }
+        });
+      console.log(quantity);
 
-    
-     
+      // var qua=[];
+      // for(var x=0;x<this.state.Product.length;x++){
+      //   qua.push(quantity[x]-this.state.Product[x].Quantity)
+
+      // }
+      // console.log(qua);
+    }
 
     // this.reset();
     //firebaseDb.database().ref("Admin/Return/Products").set(this.state.Product)
     firebaseDb.database().ref("Admin/Return").set(obj);
-    // for(var X=0;X<qua.length;X++){
-    //   firebaseDb.database().ref("Admin/Return/Balance").child(X).set(qua[X]);
-    // }
-  
-   
+    for (var X in quantity) {
+      firebaseDb
+        .database()
+        .ref("Admin/Return/Balance")
+        .child(X)
+        .set(quantity[X]);
+    }
   };
 
   handleFormSubmit = (e) => {
@@ -196,11 +199,16 @@ class ReturnForm extends Component {
     this.setState({
       initialFieldValues,
     });
+    spin=spin+1;
   };
 
   render() {
     const { classes } = this.props;
-    
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
     return (
       <>
         <div className={classes.root}>
@@ -364,10 +372,15 @@ class ReturnForm extends Component {
 
                         <Grid>
                           {this.state.Product.length !== 1 && (
-                            <Button variant="outlined" className="mr10" color="secondary" onClick={() => this.handleRemoveClick(i)}>
-                         Remove
-                          </Button>
-                            
+                            <Button
+                              variant="outlined"
+                              className="mr10"
+                              color="secondary"
+                              onClick={() => this.handleRemoveClick(i)}
+                            >
+                              Remove
+                            </Button>
+
                             // <button
                             //   className="mr10"
                             //   onClick={() => this.handleRemoveClick(i)}
@@ -376,9 +389,13 @@ class ReturnForm extends Component {
                             // </button>
                           )}
                           {this.state.Product.length - 1 === i && (
-                            <Button variant="outlined" color="primary" onClick={this.handleAddClick}>
-                            Add
-                          </Button>
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              onClick={this.handleAddClick}
+                            >
+                              Add
+                            </Button>
                             // <button onClick={this.handleAddClick}>Add</button>
                           )}
                         </Grid>
@@ -407,24 +424,28 @@ class ReturnForm extends Component {
                     </Select>
                   </Grid>
 
-                  
-
                   <Grid item xs={12}>
-                  
-                    <Link to="/ReturnBill">
-                      Bill
                     
                       <Button
                         variant="contained"
                         color="Primary"
                         onClick={this.handleFormSubmit}
-                        
                       >
                         Bill
                       </Button>
-                    </Link>
-                    
+                  
+                    (Double Click the button)
                   </Grid>
+                  {spin === 2 ? 
+                  <>
+                  <Loader
+                    type="TailSpin"
+                    color="#00BFFF"
+                    secondaryColor="grey"
+                    height={100}
+                    width={100}
+                    timeout={3000} //3 secs
+                  /><Link to="/ReturnBill">bill</Link></>:console.log(spin)}
                 </Grid>
               </Container>
             </React.Fragment>
