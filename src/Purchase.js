@@ -103,6 +103,7 @@ class Form extends Component {
           // }
         });
     }
+    
     this.setState({
       ...this.state,
       [name]: value,
@@ -287,6 +288,7 @@ class Form extends Component {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       required
+                      type="date"
                       name="Date"
                       label="Date"
                       fullWidth
@@ -298,6 +300,7 @@ class Form extends Component {
                       }}
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <TextField
                       required

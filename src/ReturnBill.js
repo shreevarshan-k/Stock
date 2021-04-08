@@ -166,7 +166,9 @@ class BillGenerate extends Component {
                                 (billamount += parseInt(
                                   this.state.custObjects[key].Rate *
                                     this.state.custObjects[key].Quantity
-                                )),
+                                ))
+                                // eslint-disable-next-line
+                                ,
                                 (
                                   <TableRow hover key={key}>
                                     <TableCell>

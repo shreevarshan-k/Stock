@@ -120,7 +120,7 @@ import {
              src="https://firebasestorage.googleapis.com/v0/b/stock-5230f.appspot.com/o/WhatsApp%20Image%202021-04-03%20at%202.24.28%20PM.jpeg?alt=media&token=e50b72ce-ff67-4d22-a898-f90e6fae8d91" 
              to="/app/account"
             />
-              <Typography variant="h6" style={{marginLeft:"1rem"}} noWrap>
+              <Typography variant="h6" style={{marginLeft:"1rem",color: "white"}} noWrap>
                UT and TZ 
               </Typography>
   

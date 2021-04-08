@@ -2,9 +2,7 @@ import "@firebase/storage";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+
 
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -16,7 +14,16 @@ import React, { Component } from "react";
 import firebaseDb from "./firebase.js";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@material-ui/core";
 
 const initialFieldValues = {
   BillNo: "",
@@ -158,27 +165,21 @@ class ReturnForm extends Component {
     //     if (snapshot.val() != null) {
     //       //this.setState({ PartyName: snapshot.val() });
     //      console.log(snapshot.val())
-          
+
     //       quantity.push(snapshot.val())
-          
+
     //     }
-        
+
     //   });
     //   console.log(quantity);
-      
+
     //   var qua=[];
     //   for(var x=0;x<this.state.Product.length;x++){
     //     qua.push(quantity[x]-this.state.Product[x].Quantity)
-        
+
     //   }
     //   console.log(qua);
     // }
-    
-
-    
-
-    
-     
 
     // this.reset();
     //firebaseDb.database().ref("Admin/Return/Products").set(this.state.Product)
@@ -186,8 +187,6 @@ class ReturnForm extends Component {
     // for(var X=0;X<qua.length;X++){
     //   firebaseDb.database().ref("Admin/Return/Balance").child(X).set(qua[X]);
     // }
-  
-   
   };
 
   handleFormSubmit = (e) => {
@@ -200,7 +199,7 @@ class ReturnForm extends Component {
 
   render() {
     const { classes } = this.props;
-    
+
     return (
       <>
         <div className={classes.root}>
@@ -211,30 +210,30 @@ class ReturnForm extends Component {
             <Toolbar />
             <React.Fragment>
               <Container
-                maxWidth="sm"
-                style={{ backgroundColor: "#F8F8FF", height: "100vh" }}
+               
+                style={{ backgroundColor: "white", height: "30vh" }}
               >
                 <Typography variant="h6" gutterBottom>
-                  <h2>Return Item</h2>
+                  <h2>Bill</h2>
                 </Typography>
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={2}>
                     <TextField
                       required
                       name="PartyName"
-                      label="PartyName"
+                      label="Customer Name"
                       fullWidth
                       value={this.state.PartyName}
                       autoComplete="off"
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={2}>
                     <TextField
                       required
                       name="PartyMobile"
-                      label="PartyMobile"
+                      label="Customer Mobile"
                       fullWidth
                       value={this.state.PartyMobile}
                       autoComplete="off"
@@ -242,7 +241,7 @@ class ReturnForm extends Component {
                     />
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sm={7}>
                     <TextField
                       required
                       name="Address"
@@ -253,7 +252,7 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={2}>
                     <TextField
                       required
                       name="District"
@@ -264,7 +263,7 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={2}>
                     <TextField
                       required
                       name="Pincode"
@@ -276,11 +275,11 @@ class ReturnForm extends Component {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={2}>
                     <TextField
                       required
                       name="Date"
-                      label="Return Date"
+                      label="Date"
                       fullWidth
                       value={this.state.Date}
                       autoComplete="off"
@@ -288,7 +287,7 @@ class ReturnForm extends Component {
                     />
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <TextField
                       required
                       name="BillNo"
@@ -322,71 +321,6 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-                  {this.state.Product.map((x, i) => {
-                    return (
-                      <>
-                        {/* <p></p>
-                    <p>{i}</p> */}
-                        <Grid item xs={3}>
-                          <TextField
-                            required
-                            name="ID"
-                            label="Product Id"
-                            fullWidth
-                            value={this.state.Product.ID}
-                            autoComplete="off"
-                            onChange={(e) => this.handleInputChange1(e, i)}
-                          />
-                        </Grid>
-
-                        <Grid item xs={3}>
-                          <TextField
-                            required
-                            name="Quantity"
-                            label="Quantity"
-                            fullWidth
-                            value={this.state.Product.Quantity}
-                            autoComplete="off"
-                            onChange={(e) => this.handleInputChange1(e, i)}
-                          />
-                        </Grid>
-                        <Grid item sm={2}>
-                          <TextField
-                            required
-                            name="Rate"
-                            label=" Rate"
-                            fullWidth
-                            value={this.state.Product.Rate}
-                            autoComplete="off"
-                            onChange={(e) => this.handleInputChange1(e, i)}
-                          />
-                        </Grid>
-
-                        <Grid>
-                          {this.state.Product.length !== 1 && (
-                            <Button variant="outlined" className="mr10" color="secondary" onClick={() => this.handleRemoveClick(i)}>
-                         Remove
-                          </Button>
-                            
-                            // <button
-                            //   className="mr10"
-                            //   onClick={() => this.handleRemoveClick(i)}
-                            // >
-                            //   Remove
-                            // </button>
-                          )}
-                          {this.state.Product.length - 1 === i && (
-                            <Button variant="outlined" color="primary" onClick={this.handleAddClick}>
-                            Add
-                          </Button>
-                            // <button onClick={this.handleAddClick}>Add</button>
-                          )}
-                        </Grid>
-                      </>
-                    );
-                  })}
-                  {/* <div style={{ marginTop: 20 }}>{JSON.stringify(this.state.Product)}</div> */}
-
                   <Grid item xs={12} sm={6}>
                     <InputLabel>Puchased By</InputLabel>
 
@@ -405,29 +339,98 @@ class ReturnForm extends Component {
                         {"Aarthi"}
                       </MenuItem>
                     </Select>
-                  </Grid>
+                  </Grid> */}
 
                   
+                </Grid>
+              </Container>
+            </React.Fragment>
+            <Card>
+              <CardContent>
+                <Table id="myTable">
+                  <TableHead style={{backgroundColor:"white"}}>
+                    <TableRow>
+                      <TableCell>Product ID </TableCell>
 
-                  <Grid item xs={12}>
-                  
+                      <TableCell>Quantity</TableCell>
+
+                      <TableCell>Rate</TableCell>
+
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {this.state.Product.map((x, i) => {
+                    return (
+                      <>
+                        {/* <p></p>
+                    <p>{i}</p> */}
+                        <TableBody>
+                          <TableRow hover>
+                            <TableCell>
+                              <TextField
+                                id="outlined-basic"
+                                label="Outlined"
+                                variant="outlined"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                id="outlined-basic"
+                                label="Outlined"
+                                variant="outlined"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                id="outlined-basic"
+                                label="Outlined"
+                                variant="outlined"
+                              />
+                            </TableCell>
+                         
+
+                        <Grid>
+                          {this.state.Product.length !== 1 && (
+                              <Button variant="outlined" color="secondary" className="mr10" style={{marginTop:"1rem"}}
+                              onClick={() => this.handleRemoveClick(i)}>
+                                  Remove
+                              </Button>
+                            // <button
+                            //   className="mr10"
+                            //   onClick={() => this.handleRemoveClick(i)}
+                            // >
+                            //   Remove
+                            // </button>
+                          )}
+                          {this.state.Product.length - 1 === i && (
+                              <Button variant="outlined" color="primary" onClick={this.handleAddClick} style={{marginTop:"1rem" , marginLeft:"1rem"}}>
+                                  Add
+                              </Button>
+                           // <button onClick={this.handleAddClick}>Add</button>
+                          )}
+                        </Grid>
+                        </TableRow>
+                        </TableBody>
+                      </>
+                    );
+                  })}
+                  {/* <div style={{ marginTop: 20 }}>{JSON.stringify(this.state.Product)}</div> */}
+                </Table>
+               
+              </CardContent>
+            </Card>
+            <Grid item xs={12} style={{marginTop:"1rem" , marginLeft:"60rem"}}>
                     <Link to="/ReturnBill">
                       Bill
-                    
                       <Button
                         variant="contained"
                         color="Primary"
                         onClick={this.handleFormSubmit}
-                        
                       >
                         Bill
                       </Button>
                     </Link>
-                    
                   </Grid>
-                </Grid>
-              </Container>
-            </React.Fragment>
           </main>
         </div>
       </>
