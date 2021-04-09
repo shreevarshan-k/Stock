@@ -72,24 +72,26 @@ const useStyles = (theme) => ({
   },
 });
 
+var billno=0;
+
 class ReturnForm extends Component {
   constructor(props) {
     super(props);
     this.state = initialFieldValues;
   }
 
-  //   componentDidMount() {
-  //     firebaseDb
-  //       .database()
-  //       .ref("Anu/Pruchase")
-  //       .on("value", (snapshot) => {
-  //         if (snapshot.val() != null) {
-  //           this.setState({ studentObjects: { ...snapshot.val() } });
-  //         }
-  //       });
+    // componentDidMount() {
+    //   firebaseDb
+    //     .database()
+    //     .ref("Admin/Anu/Sales")
+    //     .on("value", (snapshot) => {
+    //       if (snapshot.val() != null) {
+    //         this.setState({ studentObjects: { ...snapshot.val() } });
+    //       }
+    //     });
 
-  //     console.log(this.state.studentObjects);
-  //   }
+    //   console.log(this.state.studentObjects);
+    // }
   handleInputChange2 = (e, index) => {
     const { name, value } = e.target;
     const list = [...this.state.Product];
@@ -124,6 +126,29 @@ class ReturnForm extends Component {
 
   handleInputChange = (e) => {
     var { name, value } = e.target;
+ 
+      
+    if(name==="Date" ){
+      var mon=new Date(value).getMonth()+1
+      console.log(value);
+      console.log(mon)
+      firebaseDb.database().ref("Admin/Anu/Sales").child(mon).child(value).child("NextBill").on("value", (snapshot) => {
+        if (snapshot.val() != null) {
+          billno =  snapshot.val()    ;
+          console.log(billno)
+        }
+        else{
+          billno="1";
+          console.log(billno)
+        }
+      });
+      
+
+  }
+  // catch(error){
+  //   console.log(error);
+  // }
+    
 
     this.setState({
       ...this.state,
@@ -131,31 +156,11 @@ class ReturnForm extends Component {
     });
   };
 
-  //   Fileupload = (e) => {
-  //     console.log("fn");
-  //     e.preventDefault();
-  //     var { name } = e.target;
-
-  //     const file = e.target.files[0];
-  //     const storageRef = firebaseDb
-  //       .storage()
-  //       .ref("Invoice/")
-  //       .child(this.state.BillNO);
-  //     const fileRef = storageRef.child(file.name);
-  //     fileRef.put(file).then((snapshot) => {
-  //       console.log("uploaded", file.name);
-  //       fileRef.getDownloadURL().then((url) => {
-  //         this.setState({
-  //           ...this.state,
-  //           [name]: url,
-  //         });
-
-  //         console.log(url);
-  //       });
-  //     });
-  //   };
+ 
 
   addorEdit = (obj) => {
+    var month = new Date(this.state.Date).getMonth() + 1;
+    
     var qua = [];
     try {
       for (let i in this.state.Product) {
@@ -213,7 +218,7 @@ class ReturnForm extends Component {
 
     // this.reset();
     
-    var month = new Date(this.state.Date).getMonth() + 1;
+   
 
     console.log(month);
     firebaseDb
@@ -222,8 +227,17 @@ class ReturnForm extends Component {
       .child(this.state.stockof)
       .child("Sales")
       .child(month)
-      .child(this.state.Date)
-      .push(this.total());
+      .child(this.state.Date).child(billno)
+      .set(this.total());
+      if(spin===1){
+      firebaseDb
+      .database()
+      .ref("Admin")
+      .child(this.state.stockof)
+      .child("Sales")
+      .child(month)
+      .child(this.state.Date).child("NextBill")
+      .set(parseInt(billno)+parseInt(1));}
     firebaseDb.database().ref("Admin/bill").set(obj)
     firebaseDb.database().ref("Admin/bill/Product/Total").remove()
     try{
