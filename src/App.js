@@ -1,6 +1,6 @@
 
 import './App.css';
-import { Route, HashRouter as Router} from "react-router-dom";
+import { Route, BrowserRouter as Router} from "react-router-dom";
 import Login from './Login';
 import Homepage from './Homepage';
 import AddParty from './AddParty';
@@ -21,7 +21,7 @@ import SalesReport from './SalesReport'
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter basename={window.location.pathname || ''}>
     <Route path="/" exact  component={Login}/>
     <Route path="/Homepage" component={Homepage} />
     
@@ -39,7 +39,7 @@ function App() {
    <Route path="/SalesBill" component={SalesBill}/>
    <Route path="/SalesBillTemplate" component={SalesBillTemplate}/>
    <Route path="/SalesReport" component={SalesReport}/>
-    </Router>
+    </BrowserRouter>
   );
 }
 
