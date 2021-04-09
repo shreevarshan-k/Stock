@@ -16,6 +16,8 @@ import MultipleInput from './MultipleInput';
 import ReturnInvoice from './ReturnInvoice';
 import SalesBill from './SalesBill';
 
+import SalesBillTemplate from './SalesBillTemplate';
+
 function App() {
   return (
     <Router>
@@ -34,6 +36,7 @@ function App() {
     <Route path="/ReturnBill" component={ReturnBill}/>
     <Route path="/ReturnInvoice" component={ReturnInvoice}/>
    <Route path="/SalesBill" component={SalesBill}/>
+   <Route path="/SalesBillTemplate" component={SalesBillTemplate}/>
     </Router>
   );
 }

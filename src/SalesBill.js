@@ -2,7 +2,9 @@ import "@firebase/storage";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -15,6 +17,7 @@ import firebaseDb from "./firebase.js";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
+import Loader from "react-loader-spinner";
 import {
   Card,
   CardContent,
@@ -24,25 +27,22 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
+import { Col, Row } from "antd";
 
 const initialFieldValues = {
-  BillNo: "",
+  CustomerName: "",
   Product: [{ ID: "", Quantity: "", Rate: "" }],
-  Quantity: "",
-  PurchaseAmt: "",
-  ReturnPercentage: "",
-  Gst: "",
   stockof: "",
-  PartyName: "",
   Address: "",
   District: "",
   Pincode: "",
-  PartyMobile: "",
+  CustomerMobile: "",
   Date: "",
+  shippingRate: "",
 };
 
 // const product={ProductId:""}
-
+var spin = 0;
 const drawerWidth = 240;
 
 const useStyles = (theme) => ({
@@ -90,6 +90,12 @@ class ReturnForm extends Component {
 
   //     console.log(this.state.studentObjects);
   //   }
+  handleInputChange2 = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...this.state.Product];
+    list[index][name] = value;
+    this.setState({ Product: list });
+  };
   handleInputChange1 = (e, index) => {
     const { name, value } = e.target;
     const list = [...this.state.Product];
@@ -150,43 +156,90 @@ class ReturnForm extends Component {
   //   };
 
   addorEdit = (obj) => {
-    // var quantity=[];
-    // for (var i = 0; i < this.state.Product.length; i++) {
-    //   console.log(this.state.Product[i].ID);
-    //   console.log(this.state.Product[i].Quantity);
-    //   console.log(this.state.Product.length)
-    //   firebaseDb
-    //   .database()
-    //   .ref("Admin")
-    //   .child(this.state.stockof)
-    //   .child("Stock")
-    //   .child(obj.Product[i].ID)
-    //   .child("Quantity").on("value", (snapshot) => {
-    //     if (snapshot.val() != null) {
-    //       //this.setState({ PartyName: snapshot.val() });
-    //      console.log(snapshot.val())
+    var qua = [];
+    try {
+      for (let i in this.state.Product) {
+        console.log(this.state.Product[i].ID);
+        console.log(this.state.Product[i].Quantity);
+        console.log(this.state.Product.length);
+        firebaseDb
+          .database()
+          .ref("Admin")
+          .child(this.state.stockof)
+          .child("Stock")
+          .child(obj.Product[i].ID)
 
-    //       quantity.push(snapshot.val())
+          .on("value", (snapshot) => {
+            if (snapshot.val() != null) {
+              //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
 
-    //     }
+              qua.push({
+                ID: obj.Product[i].ID,
+                Quan:
+                  parseInt(snapshot.val().Quantity) -
+                  parseInt(obj.Product[i].Quantity),
+                Total:
+                  parseInt(snapshot.val().Totalamt) -
+                  parseInt(obj.Product[i].Quantity) *
+                    parseInt(snapshot.val().PurchaseAmt),
+              });
+            }
+          });
+        console.log(qua);
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
-    //   });
-    //   console.log(quantity);
+    for (var x in qua) {
+      firebaseDb
+        .database()
+        .ref("Admin")
+        .child(this.state.stockof)
+        .child("Stock")
+        .child(qua[x].ID)
+        .child("Quantity")
+        .set(qua[x].Quan);
 
-    //   var qua=[];
-    //   for(var x=0;x<this.state.Product.length;x++){
-    //     qua.push(quantity[x]-this.state.Product[x].Quantity)
-
-    //   }
-    //   console.log(qua);
-    // }
+      firebaseDb
+        .database()
+        .ref("Admin")
+        .child(this.state.stockof)
+        .child("Stock")
+        .child(qua[x].ID)
+        .child("Totalamt")
+        .set(qua[x].Total);
+    }
 
     // this.reset();
-    //firebaseDb.database().ref("Admin/Return/Products").set(this.state.Product)
-    firebaseDb.database().ref("Admin/Return").set(obj);
-    // for(var X=0;X<qua.length;X++){
-    //   firebaseDb.database().ref("Admin/Return/Balance").child(X).set(qua[X]);
-    // }
+    
+    var month = new Date(this.state.Date).getMonth() + 1;
+
+    console.log(month);
+    firebaseDb
+      .database()
+      .ref("Admin")
+      .child(this.state.stockof)
+      .child("Sales")
+      .child(month)
+      .child(this.state.Date)
+      .push(this.total());
+    firebaseDb.database().ref("Admin/bill").set(obj)
+    firebaseDb.database().ref("Admin/bill/Product/Total").remove()
+    try{
+      firebaseDb.database().ref("Admin/bill/initialFieldValues").remove()
+    }
+    catch(error){
+      console.log(error)
+    }
+  };
+
+  total = () => {
+    var total = 0;
+    for (var i = 0; i < this.state.Product.length; i++) {
+      total += this.state.Product[i].Rate * this.state.Product[i].Quantity;
+    }
+    return total;
   };
 
   handleFormSubmit = (e) => {
@@ -195,6 +248,7 @@ class ReturnForm extends Component {
     this.setState({
       initialFieldValues,
     });
+    spin=spin+1;
   };
 
   render() {
@@ -209,10 +263,7 @@ class ReturnForm extends Component {
           <main className={classes.content}>
             <Toolbar />
             <React.Fragment>
-              <Container
-               
-                style={{ backgroundColor: "white", height: "30vh" }}
-              >
+              <Container style={{ backgroundColor: "white", height: "30vh" }}>
                 <Typography variant="h6" gutterBottom>
                   <h2>Bill</h2>
                 </Typography>
@@ -221,7 +272,7 @@ class ReturnForm extends Component {
                   <Grid item xs={12} sm={2}>
                     <TextField
                       required
-                      name="PartyName"
+                      name="CustomerName"
                       label="Customer Name"
                       fullWidth
                       value={this.state.PartyName}
@@ -232,7 +283,7 @@ class ReturnForm extends Component {
                   <Grid item xs={12} sm={2}>
                     <TextField
                       required
-                      name="PartyMobile"
+                      name="CustomerMobile"
                       label="Customer Mobile"
                       fullWidth
                       value={this.state.PartyMobile}
@@ -278,6 +329,7 @@ class ReturnForm extends Component {
                   <Grid item xs={12} sm={2}>
                     <TextField
                       required
+                      type="Date"
                       name="Date"
                       label="Date"
                       fullWidth
@@ -286,43 +338,19 @@ class ReturnForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-
-                  {/* <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={2}>
                     <TextField
                       required
-                      name="BillNo"
-                      label="Purchase-InvoiceNo"
+                      name="shippingRate"
+                      label="Shipping Rate"
                       fullWidth
-                      value={this.state.BillNo}
+                      value={this.state.shippingRate}
                       autoComplete="off"
                       onChange={this.handleInputChange}
                     />
                   </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      required
-                      name="ReturnPercentage"
-                      label="Return Percentage"
-                      fullWidth
-                      value={this.state.ReturnPercentage}
-                      autoComplete="off"
-                      onChange={this.handleInputChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      name="Gst"
-                      label="GST Tax"
-                      fullWidth
-                      value={this.state.Gst}
-                      autoComplete="off"
-                      onChange={this.handleInputChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <InputLabel>Puchased By</InputLabel>
+                  <Grid item xs={12} sm={3}>
+                    <InputLabel>Stock of</InputLabel>
 
                     <Select
                       label="stockof"
@@ -339,16 +367,14 @@ class ReturnForm extends Component {
                         {"Aarthi"}
                       </MenuItem>
                     </Select>
-                  </Grid> */}
-
-                  
+                  </Grid>
                 </Grid>
               </Container>
             </React.Fragment>
             <Card>
               <CardContent>
                 <Table id="myTable">
-                  <TableHead style={{backgroundColor:"white"}}>
+                  <TableHead style={{ backgroundColor: "white" }}>
                     <TableRow>
                       <TableCell>Product ID </TableCell>
 
@@ -368,69 +394,156 @@ class ReturnForm extends Component {
                           <TableRow hover>
                             <TableCell>
                               <TextField
-                                id="outlined-basic"
-                                label="Outlined"
                                 variant="outlined"
+                                required
+                                name="ID"
+                                label="Product Id"
+                                fullWidth
+                                value={this.state.Product.ID}
+                                autoComplete="off"
+                                onChange={(e) => this.handleInputChange1(e, i)}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
-                                id="outlined-basic"
-                                label="Outlined"
                                 variant="outlined"
+                                required
+                                name="Quantity"
+                                label="Quantity"
+                                fullWidth
+                                value={this.state.Product.Quantity}
+                                autoComplete="off"
+                                onChange={(e) => this.handleInputChange1(e, i)}
                               />
                             </TableCell>
                             <TableCell>
                               <TextField
+                                variant="outlined"
+                                required
+                                name="Rate"
+                                label=" Rate"
+                                fullWidth
+                                value={this.state.Product.Rate}
+                                autoComplete="off"
+                                onChange={(e) => this.handleInputChange1(e, i)}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                value={
+                                  // eslint-disable-next-line
+                                  (this.state.Product.Total =
+                                    this.state.Product[i].Quantity *
+                                    this.state.Product[i].Rate)
+                                }
                                 id="outlined-basic"
                                 label="Outlined"
                                 variant="outlined"
+                                name="Total"
+                                // onChange={(e) => this.handleInputChange2(e, i)}
                               />
                             </TableCell>
-                         
 
-                        <Grid>
-                          {this.state.Product.length !== 1 && (
-                              <Button variant="outlined" color="secondary" className="mr10" style={{marginTop:"1rem"}}
-                              onClick={() => this.handleRemoveClick(i)}>
+                            <Grid>
+                              {this.state.Product.length !== 1 && (
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  className="mr10"
+                                  style={{ marginTop: "1rem" }}
+                                  onClick={() => this.handleRemoveClick(i)}
+                                >
                                   Remove
-                              </Button>
-                            // <button
-                            //   className="mr10"
-                            //   onClick={() => this.handleRemoveClick(i)}
-                            // >
-                            //   Remove
-                            // </button>
-                          )}
-                          {this.state.Product.length - 1 === i && (
-                              <Button variant="outlined" color="primary" onClick={this.handleAddClick} style={{marginTop:"1rem" , marginLeft:"1rem"}}>
+                                </Button>
+                                // <button
+                                //   className="mr10"
+                                //   onClick={() => this.handleRemoveClick(i)}
+                                // >
+                                //   Remove
+                                // </button>
+                              )}
+                              {this.state.Product.length - 1 === i && (
+                                <Button
+                                  variant="outlined"
+                                  color="primary"
+                                  onClick={this.handleAddClick}
+                                  style={{
+                                    marginTop: "1rem",
+                                    marginLeft: "1rem",
+                                  }}
+                                >
                                   Add
-                              </Button>
-                           // <button onClick={this.handleAddClick}>Add</button>
-                          )}
-                        </Grid>
-                        </TableRow>
+                                </Button>
+                                // <button onClick={this.handleAddClick}>Add</button>
+                              )}
+                            </Grid>
+                          </TableRow>
                         </TableBody>
                       </>
                     );
                   })}
-                  {/* <div style={{ marginTop: 20 }}>{JSON.stringify(this.state.Product)}</div> */}
+                  {/* <div style={{ marginTop: 20 }}>
+                    {JSON.stringify(this.state.Product)}
+                  </div> */}
                 </Table>
-               
               </CardContent>
             </Card>
-            <Grid item xs={12} style={{marginTop:"1rem" , marginLeft:"60rem"}}>
-                    <Link to="/ReturnBill">
-                      Bill
-                      <Button
-                        variant="contained"
-                        color="Primary"
-                        onClick={this.handleFormSubmit}
-                      >
-                        Bill
-                      </Button>
-                    </Link>
-                  </Grid>
+            <Row style={{ marginTop: 48 }}>
+              <Col span={8} offset={15}>
+                <table>
+                  <tr>
+                    <th>Total Amount :</th>
+                    <td>{this.total()}</td>
+                  </tr>
+                  <tr>
+                    <th>Shipping Rate:</th>
+                    <td>{this.state.shippingRate}</td>
+                  </tr>
+                  <tr>
+                    <th>Nett Total :</th>
+                    <td>
+                      {parseInt(this.total()) +
+                        parseInt(this.state.shippingRate)}
+                    </td>
+                  </tr>
+                  {/* <tr>
+                        <th>Nett Total :</th>
+                        <td>Rs. 100</td>
+                      </tr> */}
+                </table>
+              </Col>
+            </Row>
+            <Grid
+              item
+              xs={12}
+              style={{ marginTop: "1rem", marginLeft: "60rem" }}
+            >
+              
+                <Button
+                  variant="contained"
+                  color="Primary"
+                  onClick={this.handleFormSubmit}
+                >
+                  Bill
+                </Button>
+                {spin === 2 ? (
+              <>
+                <Loader
+                  type="TailSpin"
+                  color="blue"
+                  secondaryColor="grey"
+                  height={50}
+                  width={50}
+                  timeout={3000} //3 secs
+                />
+                <Link to="/SalesBillTemplate">Bill</Link>
+              </>
+            ) : (
+              console.log(spin)
+            )}
+              
+            </Grid>
+           
           </main>
         </div>
       </>

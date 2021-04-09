@@ -10,6 +10,7 @@ import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 
+
 import { Avatar, Box, Divider, Typography } from "@material-ui/core";
 
 // import useStyles from "./UseStyle";
@@ -227,6 +228,14 @@ class SidebarEmployee extends Component {
                   <CategoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Return" style={{ color: "black" }} />
+              </ListItem>
+            </Link>
+            <Link to="/SalesBill" className="Sidebar-content">
+              <ListItem button>
+                <ListItemIcon style={{color:"#ffcc00"}}>
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Sales Bill" style={{ color: "black" }} />
               </ListItem>
             </Link>
 
