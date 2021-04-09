@@ -76,7 +76,7 @@ class Numofcategory extends Component {
   componentDidMount() {
      firebaseDb
       .database()
-      .ref("Admin/Anu/Stock")
+      .ref("Admin").child(localStorage.getItem("user")).child("Stock")
       .on("value", (snapshot) => {
         if (snapshot.val() != null) {
           this.setState({ studentObjects: { ...snapshot.val() } });

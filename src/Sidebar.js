@@ -5,17 +5,14 @@ import { withStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
 import AddIcon from "@material-ui/icons/Add";
 
-import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 
 
 import { Avatar, Box, Divider, Typography } from "@material-ui/core";
 
 // import useStyles from "./UseStyle";
 import {
-  Collapse,
+ 
   Drawer,
   List,
   ListItem,
@@ -26,8 +23,7 @@ import {
 // import { makeStyles } from "@material-ui/core/styles";
 import {
  
-  ExpandLess,
-  ExpandMore,
+  
   Home as HomeIcon,
   
 } from "@material-ui/icons";
@@ -138,6 +134,7 @@ class SidebarEmployee extends Component {
               src="https://firebasestorage.googleapis.com/v0/b/stock-5230f.appspot.com/o/WhatsApp%20Image%202021-04-03%20at%202.24.28%20PM.jpeg?alt=media&token=e50b72ce-ff67-4d22-a898-f90e6fae8d91"
               to="/app/account"
             />
+            {localStorage.getItem("user")==="Anu"?
             <Typography
               className={classes.name}
               color="textPrimary"
@@ -145,6 +142,15 @@ class SidebarEmployee extends Component {
             >
               Unique Trendz
             </Typography>
+            :
+            <Typography
+              className={classes.name}
+              color="textPrimary"
+              variant="h5"
+            >
+              Trendz zone
+            </Typography>}
+
             <Typography color="textSecondary" variant="body2">
               Admin
             </Typography>
@@ -238,34 +244,16 @@ class SidebarEmployee extends Component {
                 <ListItemText primary="Sales Bill" style={{ color: "black" }} />
               </ListItem>
             </Link>
+            <Link to="/SalesReport" className="Sidebar-content">
+              <ListItem button>
+                <ListItemIcon style={{color:"#ffcc00"}}>
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Sales Report" style={{ color: "black" }} />
+              </ListItem>
+            </Link>
 
-            <ListItem button onClick={this.handleClick}>
-              <ListItemIcon>
-                <ToggleOnIcon />
-              </ListItemIcon>
-              <ListItemText primary="Allocation" />
-              {this.state.open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <Link to="/Allocation" className="Sidebar-content">
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <AddCircleOutlineIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Allocate" />
-                  </ListItem>
-                </Link>
-                <Link to="/date" className="Sidebar-content">
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <DesktopWindowsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Allocation View" />
-                  </ListItem>
-                </Link>
-              </List>
-            </Collapse>
+            
 
 
             

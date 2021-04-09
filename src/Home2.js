@@ -22,6 +22,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 
 
+
 const drawerWidth = 240;
 
 const useStyles = (theme) => ({
@@ -65,7 +66,7 @@ const useStyles = (theme) => ({
 
   
 });
-var today;
+var today,month;
 class Noofassetbooked extends Component {
   constructor(props) {
     super(props);
@@ -77,17 +78,37 @@ class Noofassetbooked extends Component {
 
   componentDidMount() {
       today=new Date()
-      if(today.getMonth()+1<10){
-      today= today.getFullYear() + '-0' + (today.getMonth()+1) + '-' + today.getDate();}
-      else{
-        today= today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+      month=new Date().getMonth()+1
+      console.log(today.getDate())
+      if (today.getDate() < 10 && today.getMonth() < 10) {
+         today =
+          today.getFullYear() +
+          "-0" +
+          (today.getMonth() + 1) +
+          "-0" +
+          today.getDate();
+      } else if (today.getDate() < 10) {
+         today =
+          today.getFullYear() +
+          "-" +
+          (today.getMonth() + 1) +
+          "-0" +
+          today.getDate();
+      } else if (today.getMonth() < 10) {
+         today =
+          today.getFullYear() +
+          "-0" +
+          (today.getMonth() + 1) +
+          "-" +
+          today.getDate();
       }
-      console.log(today)
+      console.log(month)
+      
      firebaseDb
       .database()
-      .ref("Admin/Asset_Booked").child(today)
+      .ref("Admin").child(localStorage.getItem("user")).child("Sales").child(month).child(today)
       .on("value", (snapshot) => {
-        if (snapshot.val() != null) {
+        if (snapshot.val() != null ) {
           this.setState({ studentObjects: { ...snapshot.val() } });
         }
       })
@@ -97,12 +118,16 @@ class Noofassetbooked extends Component {
   }
 
   count=()=>{
-    const c=[]
+   
+    var total=0;
     for (let i in this.state.studentObjects) {
-      c.push(i)
+      if(i!=="NextBill"){
+        total = total+this.state.studentObjects[i]
+      }
+    
    }
-   console.log(c.length)
-  return(c.length)
+  
+  return(total)
    
   }
 
@@ -133,13 +158,13 @@ class Noofassetbooked extends Component {
               gutterBottom
               variant="h6"
             >
-            Today's Expensense:
+            Today's Sales:
             </Typography>
             <Typography
               color="textPrimary"
-              variant="h3"
+              variant="h4"
             >
-              {this.count()}
+             ₹ {this.count()}
             </Typography>
           </Grid>
           <Grid item>

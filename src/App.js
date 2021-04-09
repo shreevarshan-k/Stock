@@ -17,12 +17,13 @@ import ReturnInvoice from './ReturnInvoice';
 import SalesBill from './SalesBill';
 
 import SalesBillTemplate from './SalesBillTemplate';
+import SalesReport from './SalesReport'
 
 function App() {
   return (
     <Router>
-    <Route path="/Login"  component={Login}/>
-    <Route path="/" exact component={Homepage} />
+    <Route path="/" exact  component={Login}/>
+    <Route path="/Homepage" component={Homepage} />
     
     <Route path="/AddParty" component={AddParty} />
     <Route path="/PartiesList" component={PartiesList}/>
@@ -37,6 +38,7 @@ function App() {
     <Route path="/ReturnInvoice" component={ReturnInvoice}/>
    <Route path="/SalesBill" component={SalesBill}/>
    <Route path="/SalesBillTemplate" component={SalesBillTemplate}/>
+   <Route path="/SalesReport" component={SalesReport}/>
     </Router>
   );
 }
