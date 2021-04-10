@@ -436,6 +436,7 @@ class ReturnForm extends Component {
                       <TableCell>Quantity</TableCell>
 
                       <TableCell>Rate</TableCell>
+                      <TableCell>GST</TableCell>
 
                       <TableCell></TableCell>
                     </TableRow>
@@ -562,9 +563,9 @@ class ReturnForm extends Component {
                       </>
                     );
                   })}
-                  <div style={{ marginTop: 20 }}>
+                  {/* <div style={{ marginTop: 20 }}>
                     {JSON.stringify(this.state.Product)}
-                  </div>
+                  </div> */}
                 </Table>
               </CardContent>
             </Card>

@@ -197,7 +197,10 @@ import {
                                     
                                   )}
                                 </TableBody>
-                                Total Amount :{this.Amount()}
+                                <TableCell colSpan="3"></TableCell>
+                                <TableCell>Total Amount :</TableCell>
+                                <TableCell>
+                                {this.Amount()}</TableCell>
                               </Table>
                             </CardContent>
                           </Card>

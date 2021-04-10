@@ -2,7 +2,7 @@
 import './App.css';
 // eslint-disable-next-line
 import { Route, BrowserRouter as BrowserRouter} from "react-router-dom";
-import Login from './Login';
+//import Login from './Login';
 import Homepage from './Homepage';
 import AddParty from './AddParty';
 import PartiesList from './PartiesList';
@@ -20,6 +20,8 @@ import SalesBill from './SalesBill';
 import SalesBillTemplate from './SalesBillTemplate';
 import SalesReport from './SalesReport'
 import NewLogin from './NewLogin'
+import ExpensenseEntry from './ExpensenseEntry';
+import ExpensenseReport from './ExpensenseReport';
 
 function App() {
   return (
@@ -42,8 +44,11 @@ function App() {
    <Route path="/SalesBillTemplate" component={SalesBillTemplate}/>
    <Route path="/SalesReport" component={SalesReport}/>
    {/* <Route path="/NewLogin" component={NewLogin}/> */}
+   <Route path="/ExpensenseEntry" component={ExpensenseEntry}/>
+   <Route path="/ExpensenseReport" component={ExpensenseReport}/>
     </BrowserRouter>
   );
 }
 
 export default App;
+ 

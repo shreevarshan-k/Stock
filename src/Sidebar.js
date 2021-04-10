@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link} from "react-router-dom";
 import firebaseDb from "./firebase.js";
 import { withStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
@@ -24,7 +24,7 @@ import {
 import {
  
   
-  Home as HomeIcon, LocalTaxiOutlined,
+  Home as HomeIcon,
   
 } from "@material-ui/icons";
 
@@ -72,7 +72,7 @@ const useStyles = (theme) => ({
     width: "100%",
   },
 });
-var reload="false"
+
 
 // const classes = useStyles();
 
@@ -98,11 +98,7 @@ class SidebarEmployee extends Component {
       .child(name)
       .set(name);
   };
-  refreshpage=()=>
-  {
-    window.location.reload(false);
-    reload="true"
-  }
+ 
 
   componentDidMount() {
     // const [open, setOpen] = React.useState(true);
@@ -119,9 +115,7 @@ class SidebarEmployee extends Component {
 
   render() {
     const { classes } = this.props;
-    if(reload!="false"){
-     return <Redirect to="/SalesBill"/>
-    }
+    
     return (
       <Drawer
         className={classes.drawer}
@@ -250,7 +244,7 @@ class SidebarEmployee extends Component {
                 <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
-                <ListItemText primary="Sales Bill" style={{ color: "black" }} onClick={this.refreshpage} />
+                <ListItemText primary="Sales Bill" style={{ color: "black" }}  />
               </ListItem>
             </Link>
             <Link to="/SalesReport" className="Sidebar-content">
@@ -259,6 +253,22 @@ class SidebarEmployee extends Component {
                   <CategoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Sales Report" style={{ color: "black" }} />
+              </ListItem>
+            </Link>
+            <Link to="/ExpensenseEntry" className="Sidebar-content">
+              <ListItem button>
+                <ListItemIcon >
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Expensense Entry" style={{ color: "black" }} />
+              </ListItem>
+            </Link>
+            <Link to="/ExpensenseReport" className="Sidebar-content">
+              <ListItem button>
+                <ListItemIcon >
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Expensense Report" style={{ color: "black" }} />
               </ListItem>
             </Link>
 
