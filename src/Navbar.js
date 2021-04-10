@@ -105,7 +105,7 @@ import {
           <AppBar
             position="fixed"
             style={{
-              background: '#000066',
+              background: '#4481eb ',
             }}
             className={classes.appBar}
           >

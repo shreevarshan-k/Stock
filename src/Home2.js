@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import firebaseDb from './firebase.js';
 import { Link } from "react-router-dom";
-import EventIcon from '@material-ui/icons/Event';
+import MoneyIcon from '@material-ui/icons/Money';
 import {
   Avatar,
 
@@ -169,7 +169,7 @@ class Noofassetbooked extends Component {
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-            <EventIcon />
+            <MoneyIcon />
             </Avatar>
           </Grid>
         </Grid>
@@ -192,7 +192,7 @@ class Noofassetbooked extends Component {
             Since last month
           </Typography>
         </Box>  */}
-         <Link to='./BookedAssetView' className="Sidebar-content">
+         <Link to='./SalesReport' className="Sidebar-content">
         <Button
            
           color="primary"

@@ -21,6 +21,9 @@ import Loader from "react-loader-spinner";
 import {
   Card,
   CardContent,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
   Table,
   TableBody,
   TableCell,
@@ -31,7 +34,7 @@ import { Col, Row } from "antd";
 
 const initialFieldValues = {
   CustomerName: "",
-  Product: [{ ID: "", Quantity: "", Rate: "" }],
+  Product: [{ ID: "", Quantity: "", Rate: "", Gst: "" }],
   stockof: "",
   Address: "",
   District: "",
@@ -39,6 +42,7 @@ const initialFieldValues = {
   CustomerMobile: "",
   Date: "",
   shippingRate: "",
+  GST: "",
 };
 
 // const product={ProductId:""}
@@ -72,7 +76,7 @@ const useStyles = (theme) => ({
   },
 });
 
-var billno=0;
+var billno = 0;
 
 class ReturnForm extends Component {
   constructor(props) {
@@ -80,18 +84,18 @@ class ReturnForm extends Component {
     this.state = initialFieldValues;
   }
 
-    // componentDidMount() {
-    //   firebaseDb
-    //     .database()
-    //     .ref("Admin/Anu/Sales")
-    //     .on("value", (snapshot) => {
-    //       if (snapshot.val() != null) {
-    //         this.setState({ studentObjects: { ...snapshot.val() } });
-    //       }
-    //     });
+  // componentDidMount() {
+  //   firebaseDb
+  //     .database()
+  //     .ref("Admin/Anu/Sales")
+  //     .on("value", (snapshot) => {
+  //       if (snapshot.val() != null) {
+  //         this.setState({ studentObjects: { ...snapshot.val() } });
+  //       }
+  //     });
 
-    //   console.log(this.state.studentObjects);
-    // }
+  //   console.log(this.state.studentObjects);
+  // }
   handleInputChange2 = (e, index) => {
     const { name, value } = e.target;
     const list = [...this.state.Product];
@@ -116,7 +120,10 @@ class ReturnForm extends Component {
   // handle click event of the Add button
   handleAddClick = () => {
     this.setState({
-      Product: [...this.state.Product, { ID: "", Quantity: "", Rate: "" }],
+      Product: [
+        ...this.state.Product,
+        { ID: "", Quantity: "", Rate: "", Gst: "" },
+      ],
     });
   };
 
@@ -126,29 +133,30 @@ class ReturnForm extends Component {
 
   handleInputChange = (e) => {
     var { name, value } = e.target;
- 
-      
-    if(name==="Date" ){
-      var mon=new Date(value).getMonth()+1
-      console.log(value);
-      console.log(mon)
-      firebaseDb.database().ref("Admin/Anu/Sales").child(mon).child(value).child("NextBill").on("value", (snapshot) => {
-        if (snapshot.val() != null) {
-          billno =  snapshot.val()    ;
-          console.log(billno)
-        }
-        else{
-          billno="1";
-          console.log(billno)
-        }
-      });
-      
 
-  }
-  // catch(error){
-  //   console.log(error);
-  // }
-    
+    if (name === "Date") {
+      var mon = new Date(value).getMonth() + 1;
+      console.log(value);
+      console.log(mon);
+      firebaseDb
+        .database()
+        .ref("Admin/Anu/Sales")
+        .child(mon)
+        .child(value)
+        .child("NextBill")
+        .on("value", (snapshot) => {
+          if (snapshot.val() != null) {
+            billno = snapshot.val();
+            console.log(billno);
+          } else {
+            billno = "1";
+            console.log(billno);
+          }
+        });
+    }
+    // catch(error){
+    //   console.log(error);
+    // }
 
     this.setState({
       ...this.state,
@@ -156,17 +164,16 @@ class ReturnForm extends Component {
     });
   };
 
- 
-
   addorEdit = (obj) => {
     var month = new Date(this.state.Date).getMonth() + 1;
-    
+
     var qua = [];
     try {
       for (let i in this.state.Product) {
         console.log(this.state.Product[i].ID);
         console.log(this.state.Product[i].Quantity);
         console.log(this.state.Product.length);
+        if(this.state.Product[i].Gst==="Yes"){
         firebaseDb
           .database()
           .ref("Admin")
@@ -187,38 +194,70 @@ class ReturnForm extends Component {
                   parseInt(snapshot.val().Totalamt) -
                   parseInt(obj.Product[i].Quantity) *
                     parseInt(snapshot.val().PurchaseAmt),
+                   
               });
             }
-          });
-        console.log(qua);
+          });}
+          else{
+            firebaseDb
+            .database()
+            .ref("Admin")
+            .child(this.state.stockof)
+            .child("NONGSTStock")
+            .child(obj.Product[i].ID)
+  
+            .on("value", (snapshot) => {
+              if (snapshot.val() != null) {
+                //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
+  
+                qua.push({
+                  ID: obj.Product[i].ID,
+                  Quan:
+                    parseInt(snapshot.val().Quantity) -
+                    parseInt(obj.Product[i].Quantity),
+                  Total:
+                    parseInt(snapshot.val().Totalamt) -
+                    parseInt(obj.Product[i].Quantity) *
+                      parseInt(snapshot.val().PurchaseAmt),
+                     
+                });
+              }
+            });
+
+          }
+        
       }
+      
     } catch (error) {
       console.log(error);
     }
+    if(spin>0){
 
-    for (var x in qua) {
-      firebaseDb
-        .database()
-        .ref("Admin")
-        .child(this.state.stockof)
-        .child("Stock")
-        .child(qua[x].ID)
-        .child("Quantity")
-        .set(qua[x].Quan);
-
-      firebaseDb
-        .database()
-        .ref("Admin")
-        .child(this.state.stockof)
-        .child("Stock")
-        .child(qua[x].ID)
-        .child("Totalamt")
-        .set(qua[x].Total);
+      for (var x in qua) {
+        firebaseDb
+          .database()
+          .ref("Admin")
+          .child(this.state.stockof)
+          .child("Stock")
+          .child(qua[x].ID)
+          .child("Quantity")
+          .set(qua[x].Quan);
+  
+        firebaseDb
+          .database()
+          .ref("Admin")
+          .child(this.state.stockof)
+          .child("Stock")
+          .child(qua[x].ID)
+          .child("Totalamt")
+          .set(qua[x].Total);
+      }
     }
 
-    // this.reset();
     
-   
+    
+
+    // this.reset();
 
     console.log(month);
     firebaseDb
@@ -227,24 +266,26 @@ class ReturnForm extends Component {
       .child(this.state.stockof)
       .child("Sales")
       .child(month)
-      .child(this.state.Date).child(billno)
+      .child(this.state.Date)
+      .child(billno)
       .set(this.total());
-      if(spin===1){
+    if (spin === 1) {
       firebaseDb
-      .database()
-      .ref("Admin")
-      .child(this.state.stockof)
-      .child("Sales")
-      .child(month)
-      .child(this.state.Date).child("NextBill")
-      .set(parseInt(billno)+parseInt(1));}
-    firebaseDb.database().ref("Admin/bill").set(obj)
-    firebaseDb.database().ref("Admin/bill/Product/Total").remove()
-    try{
-      firebaseDb.database().ref("Admin/bill/initialFieldValues").remove()
+        .database()
+        .ref("Admin")
+        .child(this.state.stockof)
+        .child("Sales")
+        .child(month)
+        .child(this.state.Date)
+        .child("NextBill")
+        .set(parseInt(billno) + parseInt(1));
     }
-    catch(error){
-      console.log(error)
+    firebaseDb.database().ref("Admin/bill").set(obj);
+    firebaseDb.database().ref("Admin/bill/Product/Total").remove();
+    try {
+      firebaseDb.database().ref("Admin/bill/initialFieldValues").remove();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -262,7 +303,7 @@ class ReturnForm extends Component {
     this.setState({
       initialFieldValues,
     });
-    spin=spin+1;
+    spin = spin + 1;
   };
 
   render() {
@@ -341,11 +382,11 @@ class ReturnForm extends Component {
                   </Grid>
 
                   <Grid item xs={12} sm={2}>
+                    <InputLabel>Date</InputLabel>
                     <TextField
                       required
                       type="Date"
                       name="Date"
-                      label="Date"
                       fullWidth
                       value={this.state.Date}
                       autoComplete="off"
@@ -443,6 +484,31 @@ class ReturnForm extends Component {
                               />
                             </TableCell>
                             <TableCell>
+                              <Grid item xs={12} sm={3}>
+                                <label>GST</label>
+                                <pre></pre>
+
+                                <RadioGroup
+                                  aria-label="gender"
+                                  name="Gst"
+                                  value={this.state.Product.Gst}
+                                  onChange={(e) => this.handleInputChange1(e, i)}
+                                >
+                                  <FormControlLabel
+                                    value="Yes"
+                                    control={<Radio />}
+                                    label="Yes"
+                                  />
+                                  <FormControlLabel
+                                    value="NO"
+                                    control={<Radio />}
+                                    label="No"
+                                  />
+                                  
+                                </RadioGroup>
+                              </Grid>
+                            </TableCell>
+                            <TableCell>
                               <TextField
                                 value={
                                   // eslint-disable-next-line
@@ -496,9 +562,9 @@ class ReturnForm extends Component {
                       </>
                     );
                   })}
-                  {/* <div style={{ marginTop: 20 }}>
+                  <div style={{ marginTop: 20 }}>
                     {JSON.stringify(this.state.Product)}
-                  </div> */}
+                  </div>
                 </Table>
               </CardContent>
             </Card>
@@ -532,32 +598,29 @@ class ReturnForm extends Component {
               xs={12}
               style={{ marginTop: "1rem", marginLeft: "60rem" }}
             >
-              
-                <Button
-                  variant="contained"
-                  color="Primary"
-                  onClick={this.handleFormSubmit}
-                >
-                  Bill
-                </Button>
-                {spin === 2 ? (
-              <>
-                <Loader
-                  type="TailSpin"
-                  color="blue"
-                  secondaryColor="grey"
-                  height={50}
-                  width={50}
-                  timeout={3000} //3 secs
-                />
-                <Link to="/SalesBillTemplate">Bill</Link>
-              </>
-            ) : (
-              console.log(spin)
-            )}
-              
+              <Button
+                variant="contained"
+                color="Primary"
+                onClick={this.handleFormSubmit}
+              >
+                Bill
+              </Button>
+              {spin === 2 ? (
+                <>
+                  <Loader
+                    type="TailSpin"
+                    color="blue"
+                    secondaryColor="grey"
+                    height={50}
+                    width={50}
+                    timeout={3000} //3 secs
+                  />
+                  <Link to="/SalesBillTemplate">Bill</Link>
+                </>
+              ) : (
+                console.log(spin)
+              )}
             </Grid>
-           
           </main>
         </div>
       </>

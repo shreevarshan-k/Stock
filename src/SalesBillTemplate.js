@@ -16,6 +16,7 @@ import {
   import firebaseDb from "./firebase.js";
   import { Col, Divider, Row } from "antd";
   import "antd/dist/antd.css";
+  import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
   
   //import Pdf from "react-to-pdf";
   
@@ -35,6 +36,17 @@ import {
     button: {
       marginTop: theme.spacing(4),
     },
+  });
+  const styles = StyleSheet.create({
+    page: {
+      flexDirection: 'row',
+      backgroundColor: '#E4E4E4'
+    },
+    section: {
+      margin: 10,
+      padding: 10,
+      flexGrow: 1
+    }
   });
   // var today = new Date();
   // var date;
@@ -97,6 +109,10 @@ import {
             {/* <Navbar />
             <Sidebar /> */}
             <main className={classes.content} ref={ref} >
+              <Document>
+                <Page size="A5" style={styles.page}>
+                  <View>
+                    <Text>
               
               <div style={{ padding: 15 }}>
                 <Row>
@@ -230,6 +246,10 @@ import {
                   </Box> */}
                 </React.Fragment>
               </card>
+              </Text>
+                  </View>
+                </Page>
+              </Document>
               
               </main>
               {/* <Pdf targetRef={ref} filename={this.state.Leadobj}>

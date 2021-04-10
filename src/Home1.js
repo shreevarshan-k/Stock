@@ -160,7 +160,7 @@ class Numofcategory extends Component {
             Since last month
           </Typography>
         </Box> */}
-        <Link to='./Assetview' className="Sidebar-content">
+        <Link to='./StockList' className="Sidebar-content">
         <Button
            
           color="primary"

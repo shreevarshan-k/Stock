@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import firebaseDb from "./firebase.js";
 import { withStyles } from "@material-ui/core/styles";
 import CategoryIcon from "@material-ui/icons/Category";
@@ -24,7 +24,7 @@ import {
 import {
  
   
-  Home as HomeIcon,
+  Home as HomeIcon, LocalTaxiOutlined,
   
 } from "@material-ui/icons";
 
@@ -72,6 +72,7 @@ const useStyles = (theme) => ({
     width: "100%",
   },
 });
+var reload="false"
 
 // const classes = useStyles();
 
@@ -97,6 +98,11 @@ class SidebarEmployee extends Component {
       .child(name)
       .set(name);
   };
+  refreshpage=()=>
+  {
+    window.location.reload(false);
+    reload="true"
+  }
 
   componentDidMount() {
     // const [open, setOpen] = React.useState(true);
@@ -113,6 +119,9 @@ class SidebarEmployee extends Component {
 
   render() {
     const { classes } = this.props;
+    if(reload!="false"){
+     return <Redirect to="/SalesBill"/>
+    }
     return (
       <Drawer
         className={classes.drawer}
@@ -159,7 +168,7 @@ class SidebarEmployee extends Component {
           <List>
             <Link to="/Homepage" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon  style={{ color: "#ffcc00" }}>
+                <ListItemIcon  >
                   <HomeIcon />
                 </ListItemIcon>
 
@@ -170,7 +179,7 @@ class SidebarEmployee extends Component {
             
             <Link to="/AddParty" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color : "#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
 
@@ -180,7 +189,7 @@ class SidebarEmployee extends Component {
 
             <Link to="/PartiesList" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color : "#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
 
@@ -191,7 +200,7 @@ class SidebarEmployee extends Component {
 
             <Link to="/Purchase" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color : "#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
 
@@ -200,7 +209,7 @@ class SidebarEmployee extends Component {
             </Link>
             <Link to="/PurchaseList" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color : "#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
 
@@ -212,7 +221,7 @@ class SidebarEmployee extends Component {
 
             <Link to="/AddStock" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
-                <ListItemIcon style={{color:"#ffcc00"}}>
+                <ListItemIcon >
                   <AddIcon />
                 </ListItemIcon>
 
@@ -222,7 +231,7 @@ class SidebarEmployee extends Component {
 
             <Link to="/StockList" className="Sidebar-content">
               <ListItem button>
-                <ListItemIcon style={{color:"#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Stocks" style={{ color: "black" }} />
@@ -230,7 +239,7 @@ class SidebarEmployee extends Component {
             </Link>
             <Link to="/ReturnForm" className="Sidebar-content">
               <ListItem button>
-                <ListItemIcon style={{color:"#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Return" style={{ color: "black" }} />
@@ -238,15 +247,15 @@ class SidebarEmployee extends Component {
             </Link>
             <Link to="/SalesBill" className="Sidebar-content">
               <ListItem button>
-                <ListItemIcon style={{color:"#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
-                <ListItemText primary="Sales Bill" style={{ color: "black" }} />
+                <ListItemText primary="Sales Bill" style={{ color: "black" }} onClick={this.refreshpage} />
               </ListItem>
             </Link>
             <Link to="/SalesReport" className="Sidebar-content">
               <ListItem button>
-                <ListItemIcon style={{color:"#ffcc00"}}>
+                <ListItemIcon >
                   <CategoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Sales Report" style={{ color: "black" }} />
