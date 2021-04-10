@@ -1,6 +1,6 @@
 
 import './App.css';
-import { Route, BrowserRouter as Router} from "react-router-dom";
+import { Route, BrowserRouter as BrowserRouter} from "react-router-dom";
 import Login from './Login';
 import Homepage from './Homepage';
 import AddParty from './AddParty';
@@ -21,7 +21,7 @@ import SalesReport from './SalesReport'
 
 function App() {
   return (
-    <BrowserRouter basename={window.location.pathname || ''}>
+    <BrowserRouter basename={window.location.pathname || 'Homepage'}>
     <Route path="/" exact  component={Login}/>
     <Route path="/Homepage" component={Homepage} />
     

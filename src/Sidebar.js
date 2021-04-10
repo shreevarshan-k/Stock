@@ -157,7 +157,7 @@ class SidebarEmployee extends Component {
           </Box>
           <Divider />
           <List>
-            <Link to="/" className="Sidebar-content">
+            <Link to="/Homepage" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
                 <ListItemIcon  style={{ color: "#ffcc00" }}>
                   <HomeIcon />
