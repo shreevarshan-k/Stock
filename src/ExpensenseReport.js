@@ -21,8 +21,9 @@ import Button from "@material-ui/core/Button";
 import firebaseDb from "./firebase.js";
 import Sidebar from "./Sidebar.js";
 import Navbar from "./Navbar.js";
+import { Col, Row } from "antd";
 //   var amt=[];
-var tamt = 0;
+
 const ref = React.createRef();
 // var today = new Date(),
 // const drawerWidth = 240;
@@ -100,12 +101,12 @@ class SalesReport extends Component {
       }
       arr.push(date);
     }
-    this.amount(arr, arr.length);
+    this.view(arr, arr.length);
     //return console.log(arr);
   }
 
-  amount = (arr, length) => {
-      ex=[]
+  view = (arr, length) => {
+    ex = [];
     //   tamt = 0;
 
     //   for (let i in this.state.qualList) {
@@ -123,14 +124,15 @@ class SalesReport extends Component {
         .child(localStorage.getItem("user"))
         .child("Expensense")
         .child(arr[i])
+        // eslint-disable-next-line
         .on("value", (snapshot) => {
           if (snapshot.val() != null) {
-            ex.push({ ...snapshot.val() });
+            ex.push({ ...snapshot.val(), date: arr[i] });
             console.log(snapshot.val());
           }
         });
       console.log(ex);
-      this.setState({qualList:(ex)}) // console.log(i)
+      this.setState({ qualList: ex }); // console.log(i)
     }
     return ex;
     //return console.log();
@@ -157,6 +159,21 @@ class SalesReport extends Component {
       }
     }
   }
+
+  amount = () => {
+    var tamt = 0;
+
+    for (let i in ex) {
+      for (let x in ex[i]) {
+        if (x !== "date") {
+          tamt = tamt + parseInt(ex[i][x]);
+          console.log(this.state.qualList[i]);
+        }
+      }
+    }
+
+    return parseInt(tamt);
+  };
 
   handleInputChange = (e) => {
     var { name, value } = e.target;
@@ -282,33 +299,41 @@ class SalesReport extends Component {
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
-                                    {Object.keys(ex[key]).map(
-                                      (keyy) => (
-                                        <TableRow hover keyy={keyy}>
-                                         
-                                        
-                                              <TableCell>{key}</TableCell>
-                                              <TableCell>{keyy}</TableCell>
-                                              <TableCell>
-                                                {ex[key][keyy]}
-                                              </TableCell>
-                                            
-                                         
-                                        </TableRow>
-                                      )
-                                    )}
+                                    {Object.keys(ex[key]).map((keyy) => (
+                                      <TableRow hover keyy={keyy}>
+                                        {keyy !== "date" ? (
+                                          <>
+                                            <TableCell>
+                                              {ex[key]["date"]}
+                                            </TableCell>
+                                            <TableCell>{keyy}</TableCell>
+
+                                            <TableCell>
+                                              {ex[key][keyy]}
+                                            </TableCell>
+                                          </>
+                                        ) : (
+                                          console.log("date")
+                                        )}
+                                      </TableRow>
+                                    ))}
                                   </TableBody>
                                 </Table>
 
                                 {/* {amt.push(this.state.qualList[key])} */}
                               </Typography>
                             ))}
-                            <TableCell colSpan="1"></TableCell>
-                            <TableCell>Total Amount:</TableCell>
-                            <TableCell>
-                              {this.amount()}
-                              {/* {amt=[]} */}
-                            </TableCell>
+                            <Row style={{ marginTop: 48 , marginLeft: 100}}>
+                              <Col span={8} offset={14}>
+                                <table>
+                                  <tr>
+                                    <th>Total Amount :</th>
+                                    <td>Rs. {this.amount()}</td>
+                                  </tr>
+                                  
+                                </table>
+                              </Col>
+                            </Row>
                           </CardContent>
                         </Card>
                       </Box>

@@ -271,6 +271,14 @@ class SidebarEmployee extends Component {
                 <ListItemText primary="Expensense Report" style={{ color: "black" }} />
               </ListItem>
             </Link>
+            <Link to="/AddressTemplate" className="Sidebar-content">
+              <ListItem button>
+                <ListItemIcon >
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Address Slip" style={{ color: "black" }} />
+              </ListItem>
+            </Link>
 
             
 

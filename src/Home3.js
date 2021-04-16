@@ -14,8 +14,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableSortLabel,
-  Tooltip,
+ 
 
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -57,7 +56,7 @@ class FailureAssets extends Component {
     console.log(today);
     firebaseDb
       .database()
-      .ref("Maintenance/admin_maintainance")
+      .ref("Admin").child(localStorage.getItem("user")).child("Bills").child(today)
       .on("value", (snapshot) => {
         if (snapshot.val() != null) {
           this.setState({ studentObjects: { ...snapshot.val() } });
@@ -73,33 +72,31 @@ class FailureAssets extends Component {
       //   className={clsx(classes.root, className)}
       //   {...rest}
       >
-        <CardHeader title="Assets Under maintenance" />
+        <CardHeader title="Today Sales Details" />
         <Divider />
 
         <Box minWidth={800}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Category</TableCell>
-                <TableCell>Asset</TableCell>
-                <TableCell sortDirection="desc">
-                  <Tooltip enterDelay={300} title="Sort">
-                    <TableSortLabel active direction="desc">
-                      Reported Date
-                    </TableSortLabel>
-                  </Tooltip>
+                <TableCell>BillNo</TableCell>
+                <TableCell>Customer Name</TableCell>
+                <TableCell >
+                  
+                    Rate
+                    
                 </TableCell>
-                <TableCell>Status</TableCell>
+                {/* <TableCell>Status</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
               {Object.keys(this.state.studentObjects).map((key) => (
                 <TableRow hover key={key}>
                   <TableCell>
-                    {this.state.studentObjects[key].Category}
+                    {key}
                   </TableCell>
                   <TableCell>
-                    {this.state.studentObjects[key].Machinename}
+                    {this.state.studentObjects[key].CustomerName}
                   </TableCell>
                   {/* <TableCell>
                     {moment(this.state.studentObjects[key].PDate).format(
@@ -109,7 +106,7 @@ class FailureAssets extends Component {
                   <TableCell>
                     <Chip
                       color="primary"
-                      label={this.state.studentObjects[key].Status}
+                      label={this.state.studentObjects[key]["Product"].Total}
                       size="small"
                     />
                   </TableCell>

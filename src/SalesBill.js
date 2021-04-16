@@ -173,43 +173,18 @@ class ReturnForm extends Component {
         console.log(this.state.Product[i].ID);
         console.log(this.state.Product[i].Quantity);
         console.log(this.state.Product.length);
-        if(this.state.Product[i].Gst==="Yes"){
-        firebaseDb
-          .database()
-          .ref("Admin")
-          .child(this.state.stockof)
-          .child("Stock")
-          .child(obj.Product[i].ID)
-
-          .on("value", (snapshot) => {
-            if (snapshot.val() != null) {
-              //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
-
-              qua.push({
-                ID: obj.Product[i].ID,
-                Quan:
-                  parseInt(snapshot.val().Quantity) -
-                  parseInt(obj.Product[i].Quantity),
-                Total:
-                  parseInt(snapshot.val().Totalamt) -
-                  parseInt(obj.Product[i].Quantity) *
-                    parseInt(snapshot.val().PurchaseAmt),
-                   
-              });
-            }
-          });}
-          else{
-            firebaseDb
+        if (this.state.Product[i].Gst === "Yes") {
+          firebaseDb
             .database()
             .ref("Admin")
             .child(this.state.stockof)
-            .child("NONGSTStock")
+            .child("Stock")
             .child(obj.Product[i].ID)
-  
+
             .on("value", (snapshot) => {
               if (snapshot.val() != null) {
                 //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
-  
+
                 qua.push({
                   ID: obj.Product[i].ID,
                   Quan:
@@ -219,43 +194,62 @@ class ReturnForm extends Component {
                     parseInt(snapshot.val().Totalamt) -
                     parseInt(obj.Product[i].Quantity) *
                       parseInt(snapshot.val().PurchaseAmt),
-                     
+                  Gst: "Stock",
                 });
               }
             });
+        } else {
+          firebaseDb
+            .database()
+            .ref("Admin")
+            .child(this.state.stockof)
+            .child("NONGSTStock")
+            .child(obj.Product[i].ID)
 
-          }
-        
+            .on("value", (snapshot) => {
+              if (snapshot.val() != null) {
+                //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
+
+                qua.push({
+                  ID: obj.Product[i].ID,
+                  Quan:
+                    parseInt(snapshot.val().Quantity) -
+                    parseInt(obj.Product[i].Quantity),
+                  Total:
+                    parseInt(snapshot.val().Totalamt) -
+                    parseInt(obj.Product[i].Quantity) *
+                      parseInt(snapshot.val().PurchaseAmt),
+                  Gst: "NONGSTStock",
+                });
+              }
+              console.log(qua);
+            });
+        }
       }
-      
     } catch (error) {
       console.log(error);
     }
-    if(spin>0){
-
+    if (spin > 0) {
       for (var x in qua) {
         firebaseDb
           .database()
           .ref("Admin")
           .child(this.state.stockof)
-          .child("Stock")
+          .child(qua[x].Gst)
           .child(qua[x].ID)
           .child("Quantity")
           .set(qua[x].Quan);
-  
+
         firebaseDb
           .database()
           .ref("Admin")
           .child(this.state.stockof)
-          .child("Stock")
+          .child(qua[x].Gst)
           .child(qua[x].ID)
           .child("Totalamt")
           .set(qua[x].Total);
       }
     }
-
-    
-    
 
     // this.reset();
 
@@ -282,8 +276,26 @@ class ReturnForm extends Component {
     }
     firebaseDb.database().ref("Admin/bill").set(obj);
     firebaseDb.database().ref("Admin/bill/Product/Total").remove();
+    firebaseDb
+      .database()
+      .ref("Admin")
+      .child(this.state.stockof)
+      .child("Bills")
+      .child(this.state.Date)
+      .child(billno)
+      .set(obj);
+
     try {
       firebaseDb.database().ref("Admin/bill/initialFieldValues").remove();
+      firebaseDb
+        .database()
+        .ref("Admin")
+        .child(this.state.stockof)
+        .child("Bills")
+        .child(this.state.Date)
+        .child(billno)
+        .child("initialFieldValues")
+        .remove();
     } catch (error) {
       console.log(error);
     }
@@ -493,7 +505,9 @@ class ReturnForm extends Component {
                                   aria-label="gender"
                                   name="Gst"
                                   value={this.state.Product.Gst}
-                                  onChange={(e) => this.handleInputChange1(e, i)}
+                                  onChange={(e) =>
+                                    this.handleInputChange1(e, i)
+                                  }
                                 >
                                   <FormControlLabel
                                     value="Yes"
@@ -505,7 +519,6 @@ class ReturnForm extends Component {
                                     control={<Radio />}
                                     label="No"
                                   />
-                                  
                                 </RadioGroup>
                               </Grid>
                             </TableCell>

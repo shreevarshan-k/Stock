@@ -22,6 +22,7 @@ import SalesReport from './SalesReport'
 import NewLogin from './NewLogin'
 import ExpensenseEntry from './ExpensenseEntry';
 import ExpensenseReport from './ExpensenseReport';
+import AddressTemplate from './AddressTemplate';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
    {/* <Route path="/NewLogin" component={NewLogin}/> */}
    <Route path="/ExpensenseEntry" component={ExpensenseEntry}/>
    <Route path="/ExpensenseReport" component={ExpensenseReport}/>
+   <Route path="/AddressTemplate" component={AddressTemplate}/>
     </BrowserRouter>
   );
 }

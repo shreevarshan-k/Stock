@@ -110,7 +110,7 @@ import {
             <Sidebar /> */}
             <main className={classes.content} ref={ref} >
               <Document>
-                <Page size="A5" style={styles.page}>
+                <Page size="A4" style={styles.page}>
                   <View>
                     <Text>
               
