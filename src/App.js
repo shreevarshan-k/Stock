@@ -23,6 +23,8 @@ import NewLogin from './NewLogin'
 import ExpensenseEntry from './ExpensenseEntry';
 import ExpensenseReport from './ExpensenseReport';
 import AddressTemplate from './AddressTemplate';
+import invoice from './invoice';
+import SaleInvoiceTemplate from './SaleInvoiceTemplate';
 
 function App() {
   return (
@@ -48,6 +50,8 @@ function App() {
    <Route path="/ExpensenseEntry" component={ExpensenseEntry}/>
    <Route path="/ExpensenseReport" component={ExpensenseReport}/>
    <Route path="/AddressTemplate" component={AddressTemplate}/>
+   <Route path="/Invoice" component={invoice}/>
+   <Route path="/SalesInvoiceTemplate" component={SaleInvoiceTemplate}/>
     </BrowserRouter>
   );
 }

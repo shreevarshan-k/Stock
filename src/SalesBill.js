@@ -48,7 +48,7 @@ const initialFieldValues = {
 // const product={ProductId:""}
 var spin = 0;
 const drawerWidth = 240;
-
+var stock = [];
 const useStyles = (theme) => ({
   root: {
     display: "flex",
@@ -84,26 +84,69 @@ class ReturnForm extends Component {
     this.state = initialFieldValues;
   }
 
-  // componentDidMount() {
-  //   firebaseDb
-  //     .database()
-  //     .ref("Admin/Anu/Sales")
-  //     .on("value", (snapshot) => {
-  //       if (snapshot.val() != null) {
-  //         this.setState({ studentObjects: { ...snapshot.val() } });
-  //       }
-  //     });
+  componentDidMount() {
+    var gststock = [];
+    var nonstock = [];
 
-  //   console.log(this.state.studentObjects);
-  // }
-  handleInputChange2 = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...this.state.Product];
-    list[index][name] = value;
-    this.setState({ Product: list });
-  };
+    firebaseDb
+      .database()
+      .ref("Admin")
+      .child(localStorage.getItem("user"))
+      .child("Stock")
+      .on("value", (snapshot) => {
+        if (snapshot.val() != null) {
+          gststock = snapshot.val();
+          this.setState({ gst: { ...snapshot.val() } });
+        }
+      });
+    firebaseDb
+      .database()
+      .ref("Admin")
+      .child(localStorage.getItem("user"))
+      .child("NONGSTStock")
+      .on("value", (snapshot) => {
+        if (snapshot.val() != null) {
+          nonstock = snapshot.val();
+          this.setState({ Nongst: { ...snapshot.val() } });
+        }
+      });
+    for (let i in gststock) {
+      stock.push(gststock[i]);
+    }
+    for (let i in nonstock) {
+      stock.push(nonstock[i]);
+    }
+    this.setState({ studentObjects: stock });
+  }
+
   handleInputChange1 = (e, index) => {
     const { name, value } = e.target;
+    if (name === "ID") {
+      try {
+        const list = [...this.state.Product];
+        list[index]["Rate"] = this.state.gst[value].RetailAmt;
+        this.setState({ Product: list });
+        if (this.state.gst[value].RetailAmt) {
+          const list = [...this.state.Product];
+          list[index]["Gst"] = "Yes";
+          this.setState({ Product: list });
+        }
+      } catch (error) {
+        console.log("not Gst product");
+      }
+      try {
+        const list = [...this.state.Product];
+        list[index]["Rate"] = this.state.Nongst[value].RetailAmt;
+        this.setState({ Product: list });
+        if (this.state.Nongst[value].RetailAmt) {
+          const list = [...this.state.Product];
+          list[index]["Gst"] = "No";
+          this.setState({ Product: list });
+        }
+      } catch (error) {
+        console.log("Gst product");
+      }
+    }
     const list = [...this.state.Product];
     list[index][name] = value;
     this.setState({ Product: list });
@@ -135,15 +178,10 @@ class ReturnForm extends Component {
     var { name, value } = e.target;
 
     if (name === "Date") {
-      var mon = new Date(value).getMonth() + 1;
-      console.log(value);
-      console.log(mon);
+     
       firebaseDb
         .database()
-        .ref("Admin/Anu/Sales")
-        .child(mon)
-        .child(value)
-        .child("NextBill")
+        .ref("Admin/Anu/Sales/NextBill")
         .on("value", (snapshot) => {
           if (snapshot.val() != null) {
             billno = snapshot.val();
@@ -164,7 +202,170 @@ class ReturnForm extends Component {
     });
   };
 
-  addorEdit = (obj) => {
+  // addorEdit = (obj) => {
+  //   var month = new Date(this.state.Date).getMonth() + 1;
+
+  //   var qua = [];
+  //   try {
+  //     for (let i in this.state.Product) {
+  //       console.log(this.state.Product[i].ID);
+  //       console.log(this.state.Product[i].Quantity);
+  //       console.log(this.state.Product.length);
+  //       if (this.state.Product[i].Gst === "Yes") {
+  //         firebaseDb
+  //           .database()
+  //           .ref("Admin")
+  //           .child(this.state.stockof)
+  //           .child("Stock")
+  //           .child(obj.Product[i].ID)
+
+  //           .on("value", (snapshot) => {
+  //             if (snapshot.val() != null) {
+  //               //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
+
+  //               qua.push({
+  //                 ID: obj.Product[i].ID,
+  //                 Quan:
+  //                   parseInt(snapshot.val().Quantity) -
+  //                   parseInt(obj.Product[i].Quantity),
+  //                 Total:
+  //                   parseInt(snapshot.val().Totalamt) -
+  //                   parseInt(obj.Product[i].Quantity) *
+  //                     parseInt(snapshot.val().PurchaseAmt),
+  //                 Gst: "Stock",
+  //               });
+  //             }
+  //           });
+  //       } else {
+  //         firebaseDb
+  //           .database()
+  //           .ref("Admin")
+  //           .child(this.state.stockof)
+  //           .child("NONGSTStock")
+  //           .child(obj.Product[i].ID)
+
+  //           .on("value", (snapshot) => {
+  //             if (snapshot.val() != null) {
+  //               //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
+
+  //               qua.push({
+  //                 ID: obj.Product[i].ID,
+  //                 Quan:
+  //                   parseInt(snapshot.val().Quantity) -
+  //                   parseInt(obj.Product[i].Quantity),
+  //                 Total:
+  //                   parseInt(snapshot.val().Totalamt) -
+  //                   parseInt(obj.Product[i].Quantity) *
+  //                     parseInt(snapshot.val().PurchaseAmt),
+  //                 Gst: "NONGSTStock",
+  //               });
+  //             }
+  //             console.log(qua);
+  //           });
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   if (spin > 0) {
+  //     for (var x in qua) {
+  //       firebaseDb
+  //         .database()
+  //         .ref("Admin")
+  //         .child(this.state.stockof)
+  //         .child(qua[x].Gst)
+  //         .child(qua[x].ID)
+  //         .child("Quantity")
+  //         .set(qua[x].Quan);
+
+  //       firebaseDb
+  //         .database()
+  //         .ref("Admin")
+  //         .child(this.state.stockof)
+  //         .child(qua[x].Gst)
+  //         .child(qua[x].ID)
+  //         .child("Totalamt")
+  //         .set(qua[x].Total);
+  //     }
+  //   }
+
+  //   // this.reset();
+
+  //   console.log(month);
+  //   firebaseDb
+  //     .database()
+  //     .ref("Admin")
+  //     .child(this.state.stockof)
+  //     .child("Sales")
+  //     .child(this.state.Date)
+  //     .child(billno)
+  //     .set(this.total());
+  //   if (spin === 1) {
+  //     firebaseDb
+  //       .database()
+  //       .ref("Admin")
+  //       .child(this.state.stockof)
+  //       .child("Sales")
+  //       .child("NextBill")
+  //       .set(parseInt(billno) + parseInt(1));
+  //     firebaseDb
+  //       .database()
+  //       .ref("Admin")
+  //       .child(this.state.stockof)
+  //       .child("Bills")
+  //       .child(this.state.Date)
+  //       .child(billno)
+  //       .set({
+  //         CustomerName: this.state.CustomerName,
+  //         Product: this.state.Product,
+
+  //         Address: this.state.Address,
+  //         District: this.state.District,
+  //         Pincode: this.state.Pincode,
+  //         CustomerMobile: this.state.CustomerMobile,
+  //         Date: this.state.Date,
+  //         shippingRate: this.state.shippingRate,
+  //       });
+  //   }
+  //   firebaseDb.database().ref("Admin/bill").set({
+  //     CustomerName: this.state.CustomerName,
+  //     Product: this.state.Product,
+
+  //     Address: this.state.Address,
+  //     District: this.state.District,
+  //     Pincode: this.state.Pincode,
+  //     CustomerMobile: this.state.CustomerMobile,
+  //     Date: this.state.Date,
+  //     shippingRate: this.state.shippingRate,
+  //   });
+  //   firebaseDb.database().ref("Admin/bill/Product/Total").remove();
+
+  //   try {
+  //     firebaseDb.database().ref("Admin/bill/initialFieldValues").remove();
+  //     firebaseDb
+  //       .database()
+  //       .ref("Admin")
+  //       .child(this.state.stockof)
+  //       .child("Bills")
+  //       .child(this.state.Date)
+  //       .child(billno)
+  //       .child("initialFieldValues")
+  //       .remove();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  total = () => {
+    var total = 0;
+    for (var i = 0; i < this.state.Product.length; i++) {
+      total += this.state.Product[i].Rate * this.state.Product[i].Quantity;
+    }
+    return total;
+  };
+
+  handleFormSubmit = () => {
+   
     var month = new Date(this.state.Date).getMonth() + 1;
 
     var qua = [];
@@ -179,20 +380,20 @@ class ReturnForm extends Component {
             .ref("Admin")
             .child(this.state.stockof)
             .child("Stock")
-            .child(obj.Product[i].ID)
+            .child(this.state.Product[i].ID)
 
             .on("value", (snapshot) => {
               if (snapshot.val() != null) {
                 //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
 
                 qua.push({
-                  ID: obj.Product[i].ID,
+                  ID: this.state.Product[i].ID,
                   Quan:
                     parseInt(snapshot.val().Quantity) -
-                    parseInt(obj.Product[i].Quantity),
+                    parseInt(this.state.Product[i].Quantity),
                   Total:
                     parseInt(snapshot.val().Totalamt) -
-                    parseInt(obj.Product[i].Quantity) *
+                    parseInt(this.state.Product[i].Quantity) *
                       parseInt(snapshot.val().PurchaseAmt),
                   Gst: "Stock",
                 });
@@ -204,20 +405,20 @@ class ReturnForm extends Component {
             .ref("Admin")
             .child(this.state.stockof)
             .child("NONGSTStock")
-            .child(obj.Product[i].ID)
+            .child(this.state.Product[i].ID)
 
             .on("value", (snapshot) => {
               if (snapshot.val() != null) {
                 //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
 
                 qua.push({
-                  ID: obj.Product[i].ID,
+                  ID: this.state.Product[i].ID,
                   Quan:
                     parseInt(snapshot.val().Quantity) -
-                    parseInt(obj.Product[i].Quantity),
+                    parseInt(this.state.Product[i].Quantity),
                   Total:
                     parseInt(snapshot.val().Totalamt) -
-                    parseInt(obj.Product[i].Quantity) *
+                    parseInt(this.state.Product[i].Quantity) *
                       parseInt(snapshot.val().PurchaseAmt),
                   Gst: "NONGSTStock",
                 });
@@ -229,7 +430,7 @@ class ReturnForm extends Component {
     } catch (error) {
       console.log(error);
     }
-    if (spin > 0) {
+   
       for (var x in qua) {
         firebaseDb
           .database()
@@ -249,7 +450,7 @@ class ReturnForm extends Component {
           .child("Totalamt")
           .set(qua[x].Total);
       }
-    }
+    
 
     // this.reset();
 
@@ -259,34 +460,10 @@ class ReturnForm extends Component {
       .ref("Admin")
       .child(this.state.stockof)
       .child("Sales")
-      .child(month)
       .child(this.state.Date)
       .child(billno)
       .set(this.total());
-    if (spin === 1) {
-      firebaseDb
-        .database()
-        .ref("Admin")
-        .child(this.state.stockof)
-        .child("Sales")
-        .child(month)
-        .child(this.state.Date)
-        .child("NextBill")
-        .set(parseInt(billno) + parseInt(1));
-    }
-    firebaseDb.database().ref("Admin/bill").set(obj);
-    firebaseDb.database().ref("Admin/bill/Product/Total").remove();
-    firebaseDb
-      .database()
-      .ref("Admin")
-      .child(this.state.stockof)
-      .child("Bills")
-      .child(this.state.Date)
-      .child(billno)
-      .set(obj);
-
-    try {
-      firebaseDb.database().ref("Admin/bill/initialFieldValues").remove();
+   
       firebaseDb
         .database()
         .ref("Admin")
@@ -294,24 +471,36 @@ class ReturnForm extends Component {
         .child("Bills")
         .child(this.state.Date)
         .child(billno)
-        .child("initialFieldValues")
-        .remove();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+        .set({ CustomerName: this.state.CustomerName,
+          Product: this.state.Product,
+    
+          Address: this.state.Address,
+          District: this.state.District,
+          Pincode: this.state.Pincode,
+          CustomerMobile: this.state.CustomerMobile,
+          Date: this.state.Date,
+          shippingRate: this.state.shippingRate  });
+    
+    firebaseDb.database().ref("Admin/bill").set({CustomerName: this.state.CustomerName,
+      Product: this.state.Product,
 
-  total = () => {
-    var total = 0;
-    for (var i = 0; i < this.state.Product.length; i++) {
-      total += this.state.Product[i].Rate * this.state.Product[i].Quantity;
-    }
-    return total;
-  };
+      Address: this.state.Address,
+      District: this.state.District,
+      Pincode: this.state.Pincode,
+      CustomerMobile: this.state.CustomerMobile,
+      Date: this.state.Date,
+      shippingRate: this.state.shippingRate });
+    firebaseDb.database().ref("Admin/bill/Product/Total").remove();
+    
+    firebaseDb
+    .database()
+    .ref("Admin")
+    .child(this.state.stockof)
+    .child("Sales")
+    .child("NextBill")
+    .set(parseInt(billno) + parseInt(1));
 
-  handleFormSubmit = (e) => {
-    e.preventDefault();
-    this.addorEdit(this.state);
+    
     this.setState({
       initialFieldValues,
     });
@@ -449,6 +638,7 @@ class ReturnForm extends Component {
 
                       <TableCell>Rate</TableCell>
                       <TableCell>GST</TableCell>
+                      <TableCell>Total</TableCell>
 
                       <TableCell></TableCell>
                     </TableRow>
@@ -491,20 +681,19 @@ class ReturnForm extends Component {
                                 name="Rate"
                                 label=" Rate"
                                 fullWidth
-                                value={this.state.Product.Rate}
+                                value={this.state.Product[i].Rate}
                                 autoComplete="off"
                                 onChange={(e) => this.handleInputChange1(e, i)}
                               />
                             </TableCell>
                             <TableCell>
                               <Grid item xs={12} sm={3}>
-                                <label>GST</label>
                                 <pre></pre>
 
                                 <RadioGroup
                                   aria-label="gender"
                                   name="Gst"
-                                  value={this.state.Product.Gst}
+                                  value={this.state.Product[i].Gst}
                                   onChange={(e) =>
                                     this.handleInputChange1(e, i)
                                   }
@@ -515,7 +704,7 @@ class ReturnForm extends Component {
                                     label="Yes"
                                   />
                                   <FormControlLabel
-                                    value="NO"
+                                    value="No"
                                     control={<Radio />}
                                     label="No"
                                   />
@@ -531,7 +720,6 @@ class ReturnForm extends Component {
                                     this.state.Product[i].Rate)
                                 }
                                 id="outlined-basic"
-                                label="Outlined"
                                 variant="outlined"
                                 name="Total"
                                 // onChange={(e) => this.handleInputChange2(e, i)}
@@ -612,6 +800,7 @@ class ReturnForm extends Component {
               xs={12}
               style={{ marginTop: "1rem", marginLeft: "60rem" }}
             >
+              <Link to="/SalesBillTemplate">
               <Button
                 variant="contained"
                 color="Primary"
@@ -619,21 +808,8 @@ class ReturnForm extends Component {
               >
                 Bill
               </Button>
-              {spin === 2 ? (
-                <>
-                  <Loader
-                    type="TailSpin"
-                    color="blue"
-                    secondaryColor="grey"
-                    height={50}
-                    width={50}
-                    timeout={3000} //3 secs
-                  />
-                  <Link to="/SalesBillTemplate">Bill</Link>
-                </>
-              ) : (
-                console.log(spin)
-              )}
+              </Link>
+             
             </Grid>
           </main>
         </div>
