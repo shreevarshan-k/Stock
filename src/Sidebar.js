@@ -201,6 +201,15 @@ class SidebarEmployee extends Component {
                 <ListItemText primary="Add Purchase" />
               </ListItem>
             </Link>
+            <Link to="/invoice" className="Sidebar-content">
+              <ListItem button activeClassName={classes.active}>
+                <ListItemIcon >
+                  <CategoryIcon />
+                </ListItemIcon>
+
+                <ListItemText primary="Invoice" />
+              </ListItem>
+            </Link>
             <Link to="/PurchaseList" className="Sidebar-content">
               <ListItem button activeClassName={classes.active}>
                 <ListItemIcon >
@@ -269,6 +278,14 @@ class SidebarEmployee extends Component {
                   <CategoryIcon />
                 </ListItemIcon>
                 <ListItemText primary="Expensense Report" style={{ color: "black" }} />
+              </ListItem>
+            </Link>
+            <Link to="/SalesReturnForm" className="Sidebar-content">
+              <ListItem button>
+                <ListItemIcon >
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Sales Return Entry" style={{ color: "black" }} />
               </ListItem>
             </Link>
             <Link to="/AddressTemplate" className="Sidebar-content">

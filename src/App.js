@@ -25,6 +25,7 @@ import ExpensenseReport from './ExpensenseReport';
 import AddressTemplate from './AddressTemplate';
 import invoice from './invoice';
 import SaleInvoiceTemplate from './SaleInvoiceTemplate';
+import SalesReturnForm from './SalesReturnForm';
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
    <Route path="/AddressTemplate" component={AddressTemplate}/>
    <Route path="/Invoice" component={invoice}/>
    <Route path="/SalesInvoiceTemplate" component={SaleInvoiceTemplate}/>
+   <Route path="/SalesReturnForm" component={SalesReturnForm}/>
     </BrowserRouter>
   );
 }
