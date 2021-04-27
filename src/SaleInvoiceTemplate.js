@@ -84,7 +84,7 @@ import {
     componentDidMount() {
       firebaseDb
         .database()
-        .ref("Admin/Bills")
+        .ref("Admin/Anu/Bills")
         .child(localStorage.getItem("Date"))
         .child(localStorage.getItem("BillNo"))
         .on("value", (snapshot) => {
@@ -94,7 +94,8 @@ import {
         });
       firebaseDb
         .database()
-        .ref("Admin/bill/Product")
+        .ref("Admin/Anu/Bills").child(localStorage.getItem("Date"))
+        .child(localStorage.getItem("BillNo")).child("Product")
         .on("value", (snapshot) => {
           if (snapshot.val() != null) {
             this.setState({ custObjects: { ...snapshot.val() } });
@@ -103,7 +104,7 @@ import {
     }
   
     Finalamt = () => {
-      var finalamt = billamount + parseInt(this.state.assetObjects.shippingRate);
+      var finalamt = this.state.custObjects.Total + parseInt(this.state.assetObjects.shippingRate);
       return finalamt;
     };
     render() {
@@ -125,7 +126,7 @@ import {
                         <Row>
                           <Col>
                             <Divider
-                              style={{ marginLeft: "14rem", marginTop: "2rem" }}
+                              style={{ marginLeft: "10rem", marginTop: "2rem" }}
                             >
                               Bill
                             </Divider>
@@ -164,7 +165,7 @@ import {
                       <card minWidth="75%">
                         <Toolbar />
                         <React.Fragment>
-                          <Box style={{ marginTop: "-2rem", width: 800 }}>
+                          <Box style={{ marginTop: "-2rem", width: 650, marginLeft:"-2rem"}}>
                             <Card>
                               <CardContent>
                                 <Table style={{ width: 700 }}>
@@ -220,7 +221,7 @@ import {
                               <table>
                                 <tr>
                                   <th>Total Amount :</th>
-                                  <td>Rs. {billamount}</td>
+                                  <td>Rs. {this.state.custObjects.Total}</td>
                                 </tr>
                                 <tr>
                                   <th>Shipping Rate :</th>
@@ -264,24 +265,26 @@ import {
               </Document>
               
             </main>
-            <ReactToPrint 
-           
-              trigger={()=> 
-              <IconButton
-                color="primary"
-                style={{marginTop:"-20rem"}}
-                aria-label="add an alarm"
-                onClick={() => this.view()}
-              >
-                <PrintOutlined /> Print this page
-              </IconButton>} 
-              content={() => this.componentRef}/>
+            
            
             {/* <Pdf targetRef={ref} filename={this.state.Leadobj}>
                       {({ toPdf }) => <button onClick={toPdf}>Capture as PDF</button>}
                     </Pdf>
               */}
           </div>
+          <div style={{marginLeft:"20rem"}}>
+          <ReactToPrint 
+           
+              trigger={()=> 
+              <IconButton
+                color="primary"
+              
+                aria-label="add an alarm"
+                onClick={() => this.view()}
+              >
+                <PrintOutlined /> Print this page
+              </IconButton>} 
+              content={() => this.componentRef}/></div>
         </>
       );
     }
