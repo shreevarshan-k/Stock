@@ -10,6 +10,7 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 //import PurchaseInvoice from "./PurchaseInvoice";
 import SaleInvoice from "./SaleInvoice";
+import SalesReturnInvoice from "./SalesReturnInvoice";
 // import PurchaseReturninvoice from "./PurchaseReturninvoice";
 // import SalesReturnInvoice from "./SalesReturnInvoice";
 
@@ -38,10 +39,8 @@ class DealPipeline extends Component {
           <Navbar />
         </div>
         <main className={classes.content}>
-          <Tabs defaultActiveKey="home" id="uncontrolled-tab-example">
-            <Tab eventKey="home" title="Purchase Invoice">
-              hi
-            </Tab>
+          <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+            
             <Tab eventKey="profile" title="Sale Invoice">
               <SaleInvoice/>
             </Tab>
@@ -49,7 +48,7 @@ class DealPipeline extends Component {
              soon
             </Tab>
             <Tab eventKey="SalesReturn" title="Sales Return Invoice">
-              soon
+              <SalesReturnInvoice/>
             </Tab>
            
           </Tabs>

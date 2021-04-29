@@ -192,104 +192,104 @@ class SalesReturnForm extends Component {
   //     });
   //   };
 
-  addorEdit = (obj) => {
-    var qua = [];
-    try {
-      for (let i in this.state.Product) {
-        console.log(this.state.Product[i].ID);
-        console.log(this.state.Product[i].Quantity);
-        console.log(this.state.Product.length);
-        if (this.state.Product[i].Gst === "Yes") {
-          firebaseDb
-            .database()
-            .ref("Admin/Stock/GST")
+  // addorEdit = (obj) => {
+  //   var qua = [];
+  //   try {
+  //     for (let i in this.state.Product) {
+  //       console.log(this.state.Product[i].ID);
+  //       console.log(this.state.Product[i].Quantity);
+  //       console.log(this.state.Product.length);
+  //       if (this.state.Product[i].Gst === "Yes") {
+  //         firebaseDb
+  //           .database()
+  //           .ref("Admin/Stock/GST")
     
-            .child(obj.Product[i].ID)
+  //           .child(obj.Product[i].ID)
 
-            .on("value", (snapshot) => {
-              if (snapshot.val() != null) {
-                //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
+  //           .on("value", (snapshot) => {
+  //             if (snapshot.val() != null) {
+  //               //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
 
-                qua.push({
-                  ID: obj.Product[i].ID,
-                  Quan:
-                    parseInt(snapshot.val().Quantity) +
-                    parseInt(obj.Product[i].Quantity),
-                  Total:
-                    parseInt(snapshot.val().Totalamt) +
-                    parseInt(obj.Product[i].Quantity) *
-                      parseInt(snapshot.val().PurchaseAmt),
-                  Gst: "GST",
-                });
-              }
-            });
-        } else {
-          firebaseDb
-            .database()
-            .ref("Admin/Stock/NONGST")
+  //               qua.push({
+  //                 ID: obj.Product[i].ID,
+  //                 Quan:
+  //                   parseInt(snapshot.val().Quantity) +
+  //                   parseInt(obj.Product[i].Quantity),
+  //                 Total:
+  //                   parseInt(snapshot.val().Totalamt) +
+  //                   parseInt(obj.Product[i].Quantity) *
+  //                     parseInt(snapshot.val().PurchaseAmt),
+  //                 Gst: "GST",
+  //               });
+  //             }
+  //           });
+  //       } else {
+  //         firebaseDb
+  //           .database()
+  //           .ref("Admin/Stock/NONGST")
            
           
-            .child(obj.Product[i].ID)
+  //           .child(obj.Product[i].ID)
 
-            .on("value", (snapshot) => {
-              if (snapshot.val() != null) {
-                //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
+  //           .on("value", (snapshot) => {
+  //             if (snapshot.val() != null) {
+  //               //console.log(parseInt(snapshot.val())-parseInt(obj.Product[i].Quantity))
 
-                qua.push({
-                  ID: obj.Product[i].ID,
-                  Quan:
-                    parseInt(snapshot.val().Quantity) +
-                    parseInt(obj.Product[i].Quantity),
-                  Total:
-                    parseInt(snapshot.val().Totalamt) +
-                    parseInt(obj.Product[i].Quantity) *
-                      parseInt(snapshot.val().PurchaseAmt),
-                  Gst: "NONGST",
-                });
-              }
-              console.log(qua);
-            });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    for(let i in this.state.Product){
+  //               qua.push({
+  //                 ID: obj.Product[i].ID,
+  //                 Quan:
+  //                   parseInt(snapshot.val().Quantity) +
+  //                   parseInt(obj.Product[i].Quantity),
+  //                 Total:
+  //                   parseInt(snapshot.val().Totalamt) +
+  //                   parseInt(obj.Product[i].Quantity) *
+  //                     parseInt(snapshot.val().PurchaseAmt),
+  //                 Gst: "NONGST",
+  //               });
+  //             }
+  //             console.log(qua);
+  //           });
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   for(let i in this.state.Product){
         
-        billamount += parseInt(
-          this.state.Product[i].Rate *
-            this.state.Product[i].Quantity)
+  //       billamount += parseInt(
+  //         this.state.Product[i].Rate *
+  //           this.state.Product[i].Quantity)
         
-      }
-      firebaseDb.database().ref("Admin/SalesReturn").child(this.state.BillNo).set(obj);
-      firebaseDb.database().ref("Admin/SalesReturn").child(this.state.BillNo).child("Amount").set(billamount);
-        billamount=0
+  //     }
+  //     firebaseDb.database().ref("Admin/SalesReturn").child(this.state.BillNo).set(obj);
+  //     firebaseDb.database().ref("Admin/SalesReturn").child(this.state.BillNo).child("Amount").set(billamount);
+  //       billamount=0
     
-    firebaseDb.database().ref("Admin/SalesReturn").child(this.state.BillNo).child("initialFieldValues").remove();
-    if (spin > 0) {
-        for (var x in qua) {
-          firebaseDb
-            .database()
-            .ref("Admin/Stock")
+  //   firebaseDb.database().ref("Admin/SalesReturn").child(this.state.BillNo).child("initialFieldValues").remove();
+  //   if (spin > 0) {
+  //       for (var x in qua) {
+  //         firebaseDb
+  //           .database()
+  //           .ref("Admin/Stock")
            
-            .child(qua[x].Gst)
-            .child(qua[x].ID)
-            .child("Quantity")
-            .set(qua[x].Quan);
+  //           .child(qua[x].Gst)
+  //           .child(qua[x].ID)
+  //           .child("Quantity")
+  //           .set(qua[x].Quan);
   
-          firebaseDb
-            .database()
-            .ref("Admin/Stock")
+  //         firebaseDb
+  //           .database()
+  //           .ref("Admin/Stock")
            
-            .child(qua[x].Gst)
-            .child(qua[x].ID)
-            .child("Totalamt")
-            .set(qua[x].Total);
-        }
+  //           .child(qua[x].Gst)
+  //           .child(qua[x].ID)
+  //           .child("Totalamt")
+  //           .set(qua[x].Total);
+  //       }
         
-      }
+  //     }
      
-   };
+  //  };
 
   handleFormSubmit = (e) => {
     e.preventDefault();
@@ -480,8 +480,7 @@ class SalesReturnForm extends Component {
                   {this.state.Product.map((x, i) => {
                     return (
                       <>
-                        {/* <p></p>
-                    <p>{i}</p> */}
+                       
                         <Grid item xs={3}>
                           <TextField
                             required

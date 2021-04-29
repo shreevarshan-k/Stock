@@ -106,7 +106,7 @@ class Noofassetbooked extends Component {
       
      firebaseDb
       .database()
-      .ref("Admin").child(localStorage.getItem("user")).child("Sales").child(month).child(today)
+      .ref("Admin").child(localStorage.getItem("user")).child("Sales").child(today)
       .on("value", (snapshot) => {
         if (snapshot.val() != null ) {
           this.setState({ studentObjects: { ...snapshot.val() } });
