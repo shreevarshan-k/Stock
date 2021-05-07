@@ -81,21 +81,17 @@ class SalesReport extends Component {
 
   amount = () => {
     tamt = 0;
-    
 
     for (let i in this.state.qualList) {
-        for(let x in this.state.qualList[i]){
-      if (x!== "NextBill") {
-        tamt = tamt + this.state.qualList[i][x];
-        console.log(this.state.qualList[i])
+      for (let x in this.state.qualList[i]) {
+        if (x !== "NextBill") {
+          tamt = tamt + this.state.qualList[i][x];
+          console.log(this.state.qualList[i]);
+        }
       }
-    
+    }
 
-      
-    }}
-   
-    
-    return (parseInt(tamt) );
+    return parseInt(tamt);
   };
 
   myFunction() {
@@ -156,7 +152,7 @@ class SalesReport extends Component {
                       {/* <pre >      Total:{tamt}</pre> */}
 
                       <FormControl className={classes.formControl}>
-                          Enter the Month in Numeric Format "eg : 4" 
+                        Enter the Month in Numeric Format "eg : 4"
                         {/* <TextField
                           name="Category"
                           value={this.state.Category}
@@ -166,7 +162,6 @@ class SalesReport extends Component {
                           variant="outlined"
                           onChange={this.handleInputChange}
                         /> */}
-
                         {/* <InputLabel>Category</InputLabel>
                       <Select
                         label="Category"
@@ -215,19 +210,21 @@ class SalesReport extends Component {
                       <Box mt={3}>
                         <Card>
                           <CardContent>
-                            {Object.keys(this.state.qualList).map((key) => (
-                              <Typography hover key={key}>
-                                <Table id="myTable">
-                                  
-                                    <TableHead>
-                                      <TableRow>
-                                        <TableCell style={{fontSize:"25px"}}>Date</TableCell>
-                                        <TableCell style={{fontSize:"25px"}}>Bill No</TableCell>
+                            <Table id="myTable">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell style={{ fontSize: "25px" }}>
+                                    Date
+                                  </TableCell>
+                                  <TableCell style={{fontSize:"25px"}}>Bill No</TableCell>
                                         <TableCell style={{fontSize:"25px"}}>Rate</TableCell>
-                                      </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                    {Object.keys(this.state.qualList[key]).map(
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {Object.keys(this.state.qualList).map((key) => (
+                                  // <Typography hover key={key}>
+                                  
+                                    Object.keys(this.state.qualList[key]).map(
                                       (keyy) => (
                                         <TableRow hover keyy={keyy}>
                                           {keyy !== "NextBill" ? (
@@ -239,17 +236,17 @@ class SalesReport extends Component {
                                               </TableCell>
                                             </>
                                           ) : (
-                                            console.log("hi")
+                                            console.log("")
                                           )}
                                         </TableRow>
                                       )
-                                    )}
-                                  </TableBody>
-                                </Table>
+                                    )
+                                  // </Typography>
+                                ))}
+                              </TableBody>
+                            </Table>
 
-                                {/* {amt.push(this.state.qualList[key])} */}
-                              </Typography>
-                            ))}
+                            {/* {amt.push(this.state.qualList[key])} */}
                             <TableCell colSpan="1"></TableCell>
                             <TableCell>Total Amount:</TableCell>
                             <TableCell>
